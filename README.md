@@ -2,6 +2,10 @@
 
 **Wire length, throughput and deadlock in a hand-designed NoC topology, evaluated with a cycle-level simulator and automated topology search**
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23076306.svg)](https://doi.org/10.5281/zenodo.23076306)
+
+Rahul Ray · Paper: [`paper/main.pdf`](paper/main.pdf) · Preprint: [doi.org/10.5281/zenodo.23076306](https://doi.org/10.5281/zenodo.23076306)
+
 This repository revisits a Network-on-Chip (NoC) topology proposed in a 2023 B.Tech thesis and evaluates it rigorously. The original work proposed a "modified torus" and claimed it beats mesh and torus on hop count, latency and throughput, but it measured only BFS hop counts on a single 5×5 grid. This version:
 
 1. **generalises** the topology from a hand-written 5×5 adjacency list to a rule for any *n×n* grid;
@@ -9,6 +13,7 @@ This repository revisits a Network-on-Chip (NoC) topology proposed in a 2023 B.T
 3. **shows that the original BFS routing can deadlock**, proves it with channel-dependency graphs, observes it in simulation, and replaces it with a provably deadlock-free adaptive scheme;
 4. **builds a cycle-level router simulator** to measure latency vs. load under standard synthetic traffic patterns;
 5. **turns topology design into an optimisation problem** and compares random search, simulated annealing and policy-gradient RL (REINFORCE) at finding better link layouts.
+6. **validates the simulator against BookSim 2**, the standard NoC simulator.
 
 The short answer: the modified torus is a real trade-off, not a free win. At 8×8 it saves **21% of the wire** of a torus (up to 22% at 10×10), at the cost of **≈45% lower saturation throughput** under uniform traffic. Within its wire budget, though, it is as good as anything the search found.
 
@@ -30,10 +35,11 @@ The modified torus was proposed in the B.Tech thesis *"Study on BFS base routing
 | "Latency" | BFS hop count; `time.sleep(0.1)` per hop | Cycle-level simulation: buffers, virtual channels, credits, contention |
 | "Throughput" | `1 / hop_count` | Saturation throughput (simulated) and channel-load estimate (analytical) |
 | Wire length | not considered | Measured per link on the floorplan |
+| Simulator trust | n/a | Validated against BookSim 2 (§5) |
 | Deadlock | not considered (shortest-path routing on a torus) | CDG analysis + Duato-style adaptive routing with up*/down* escape |
 | `use_virtual_channel=True` | Only allowed neighbours with ≤ 2 links, but every node has 4, so routing always returned `None` | Real virtual channels |
 | Topology design | by hand | Searched automatically (annealing, REINFORCE, random) |
-| Tests | none | 38 `pytest` tests, including closed-form checks against textbook results |
+| Tests | none | 42 `pytest` tests, including closed-form checks against textbook results |
 
 ---
 
@@ -113,6 +119,20 @@ The 4*n* spare boundary ports can be paired in a huge number of ways. The torus 
 
 ![Modified torus, searched 208-tile design, torus](results/figures/searched_topology.png)
 
+### 5. The simulator agrees with BookSim
+
+A home-grown simulator is only worth trusting if it matches an established one. [BookSim 2](https://github.com/booksim/booksim2) (Jiang et al., ISPASS 2013) can't run the adaptive escape routing used above, so the check uses routing both simulators support: dimension-order routing on an 8×8 mesh and torus. `nocsim`'s `routing="dor"` re-implements BookSim's `dim_order_mesh` / `dim_order_torus`, including its dateline VC rule. Settings are matched: 4-packet buffers, single-flit packets, 1-cycle links, and `router_delay=3`, so both simulators charge 4 cycles per hop. Two known differences are corrected for openly rather than tuned away. BookSim adds 6 cycles per packet for its injection and ejection channels, and it lets a node send packets to itself (1/64 of uniform traffic, 1/8 of transpose).
+
+| Configuration | Zero-load latency | Saturation, BookSim → nocsim (uniform / transpose / bit-comp.) | Mean latency error below saturation |
+|---|---|---|---|
+| Mesh, 2 VCs | within 1% | 0.36→0.38 / 0.14→0.14 / 0.22→0.20 | 0.2–3.2% |
+| Torus, 4 VCs (2 per dateline class) | within 2% | 0.56→0.62 / 0.26→0.26 / 0.40→0.42 | 1.2–2.9% |
+| Torus, 2 VCs (1 per class) | within 2% | 0.30→0.42 / 0.12→0.20 / 0.20→0.32 | 4.7–8.4% |
+
+![nocsim vs. BookSim](results/figures/booksim_validation.png)
+
+The one real disagreement has an identified cause. In BookSim, a single VC can't forward back-to-back packets every cycle, because each packet goes through VC and switch allocation in turn. `nocsim` allows one packet per VC per cycle. When a traffic class has only one VC, `nocsim`'s saturation throughput is optimistic. With two or more VCs per class the simulators agree. The main experiments above use three VCs: one escape VC and **two adaptive VCs**, which is the regime that matched.
+
 ---
 
 ## How it works
@@ -121,7 +141,7 @@ The 4*n* spare boundary ports can be paired in a huge number of ways. The torus 
 |---|---|
 | `nocsim/topology.py` | Mesh, torus and modified torus builders, plus any "mesh + boundary links" design. Wire length on the floorplan. |
 | `nocsim/metrics.py` | All-pairs BFS with shortest-path counts; channel load with flows split evenly over minimal paths (vectorised with NumPy); throughput estimate including ejection limits. |
-| `nocsim/routing.py` | BFS (thesis), up*/down*, and minimal-adaptive with escape routing tables; channel-dependency-graph deadlock check. |
+| `nocsim/routing.py` | BFS (thesis), up*/down*, and minimal-adaptive with escape routing tables; channel-dependency-graph deadlock check. (Dimension-order routing for the BookSim comparison lives in the simulator.) |
 | `nocsim/traffic.py` | Uniform, transpose, bit-complement, tornado and hotspot patterns, as samplers (for simulation) and as matrices (for analysis). |
 | `nocsim/simulator.py` | Cycle-level input-queued router model: virtual channels, credit flow control, separable allocation, pipelined links, open-loop measurement, saturation and deadlock detection. |
 | `nocsim/search.py` | Design space of boundary-port matchings; random search, simulated annealing, REINFORCE. |
@@ -135,13 +155,23 @@ The 4*n* spare boundary ports can be paired in a huge number of ways. The torus 
 Requires Python ≥ 3.10.
 
 ```bash
+git clone https://github.com/R4hulR/nocsim.git
+cd nocsim
 pip install -r requirements.txt
-python -m pytest                              # 38 tests, ~20 s
+python -m pytest                              # 42 tests, ~20 s
 
 python experiments/01_static_metrics.py       # ~10 s
 python experiments/02_deadlock.py             # ~1 min
 python experiments/03_topology_search.py      # ~25 min on 24 cores (parallel)
 python experiments/04_simulation.py           # ~10 min on 24 cores; uses a design saved by 03
+```
+
+BookSim validation (BookSim needs Linux or WSL, plus `flex` and `bison`):
+
+```bash
+git clone https://github.com/booksim/booksim2.git && make -C booksim2/src
+python3 experiments/booksim/run_booksim.py --booksim booksim2/src/booksim   # ~3 min; stdlib only
+python experiments/05_booksim_validation.py                                 # ~2 min; compares and plots
 ```
 
 Outputs go to `results/` (CSV/JSON) and `results/figures/` (PNG). All runs are seeded.
@@ -162,7 +192,7 @@ print(r.avg_latency, r.accepted, r.saturated)
 
 ```
 nocsim/              the library (topology, metrics, routing, traffic, simulator, search)
-experiments/         one script per experiment (01-04) + shared plotting/sweep helpers
+experiments/         one script per experiment (01-05) + shared helpers; booksim/ holds the BookSim driver
 tests/               pytest suite
 results/             generated tables, figures and searched designs
 paper/               LaTeX source and PDF of the write-up
@@ -174,6 +204,21 @@ paper/               LaTeX source and PDF of the write-up
 * **No physical layout.** A *folded* torus equalises link lengths and changes the wire comparison. Area and power models (e.g. DSENT/Orion) would turn "wire tiles" into joules and mm².
 * **Search with structure.** Replace the tabular REINFORCE policy with a GNN policy, and put the simulator (or a learned surrogate of it) in the loop instead of the analytical estimate.
 * **Learned routing.** Topology and routing were optimised separately. Q-routing-style adaptive routing (Boyan & Littman, 1994) could be co-designed with the topology.
+
+## Citation
+
+If you use this code or its results, please cite the preprint:
+
+```bibtex
+@misc{ray2026lesswire,
+  author    = {Ray, Rahul},
+  title     = {Less Wire, Less Throughput: Re-evaluating a Boundary-Folded Torus Network-on-Chip},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.23076306},
+  url       = {https://doi.org/10.5281/zenodo.23076306}
+}
+```
 
 ## References
 

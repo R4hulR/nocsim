@@ -52,7 +52,7 @@ from collections import deque
 from dataclasses import asdict, dataclass
 
 from . import traffic as traffic_mod
-from .routing import UP_PHASE, RoutingTables
+from .routing import UP_PHASE, RoutingTables, grid_kind
 from .topology import Topology
 
 ADAPTIVE = -1  # packet phase meaning "not (yet) in the escape network"
@@ -111,10 +111,17 @@ def simulate(
     cfg = cfg or SimConfig()
     tables = tables or RoutingTables(topo)
     algo, V, B = cfg.routing, cfg.num_vcs, cfg.buffer_depth
-    if algo not in ("adaptive", "updown", "bfs"):
+    if algo not in ("adaptive", "updown", "bfs", "dor"):
         raise ValueError(f"unknown routing {algo!r}")
     if algo == "adaptive" and V < 2:
         raise ValueError("adaptive routing needs >= 2 VCs (one escape + one adaptive)")
+    if algo == "dor":
+        kind = grid_kind(topo)
+        if kind == "other":
+            raise ValueError("dor routing needs a plain mesh or torus")
+        if kind == "torus" and V % 2:
+            raise ValueError("dor on a torus needs an even number of VCs (two dateline classes)")
+        is_torus = kind == "torus"
 
     rng = random.Random(cfg.seed)
     rand = rng.random
@@ -149,6 +156,9 @@ def simulate(
     pipeline: list[list] = [[] for _ in range(pipe_len)]  # packets on the wire, by arrival slot
 
     minimal, bfs_port, updown = tables.minimal, tables.bfs, tables.updown
+    n = topo.n
+    port_of = [{v: p for p, v in enumerate(nbrs[u])} for u in range(N)]  # neighbour id -> output port
+    half_v = V // 2
     init_phase = UP_PHASE if algo == "updown" else ADAPTIVE
     escape_return = cfg.escape_return
     vc_range_all = range(V)
@@ -247,7 +257,41 @@ def simulate(
                 best_c = 0
                 new_phase = pkt[PHASE]
                 phase = pkt[PHASE]
-                if algo == "bfs":
+                if algo == "dor":
+                    # Dimension-order routing, written to match BookSim's
+                    # dim_order_mesh / dim_order_torus so the two simulators
+                    # can be compared like for like. Route along columns
+                    # (dimension 0) first, then rows. The packet's state,
+                    # stored in PHASE, is dim * 4 + dir * 2 + partition, fixed
+                    # when the packet turns into a dimension.
+                    r, c = divmod(u, n)
+                    dr, dc = divmod(dst, n)
+                    dim = 0 if c != dc else 1
+                    if phase < 0 or phase // 4 != dim:
+                        cur, end = (c, dc) if dim == 0 else (r, dr)
+                        if is_torus:
+                            # Shorter way round the ring; a coin flip on ties.
+                            dist2 = n - 2 * ((end - cur) % n)
+                            positive = dist2 > 0 or (dist2 == 0 and rand() < 0.5)
+                            # BookSim's fixed-dateline VC partition, verbatim.
+                            part = 1 if (positive and cur > end) or (not positive and end < cur) else 0
+                        else:
+                            positive, part = end > cur, 0
+                        phase = pkt[PHASE] = dim * 4 + (0 if positive else 2) + part
+                    step = 1 if phase % 4 < 2 else -1
+                    if dim == 0:
+                        v = r * n + (c + step) % n
+                    else:
+                        v = ((r + step) % n) * n + c
+                    p = port_of[u][v]
+                    if not out_used[p]:
+                        # On a torus each dateline partition owns half the VCs.
+                        lo, hi = (half_v * (phase % 2), half_v * (phase % 2 + 1)) if is_torus else (0, V)
+                        for vc in range(lo, hi):
+                            c_ = cr[p * V + vc]
+                            if c_ > best_c:
+                                best_p, best_vc, best_c = p, vc, c_
+                elif algo == "bfs":
                     p = bfs_port[u][dst]
                     if not out_used[p]:
                         for vc in vc_range_all:

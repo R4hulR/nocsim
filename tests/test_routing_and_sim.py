@@ -68,3 +68,32 @@ def test_annealing_beats_hand_design_on_small_grid():
     res = simulated_annealing(obj, 600, seed=0, init=modified_torus(n).extra_links())
     assert res.best_score >= hand
     assert obj.stats(res.best_links)["total_wire"] <= budget
+
+
+# ---- dimension-order routing (used to validate against BookSim) -------------
+
+def test_dor_zero_load_latency_is_hops_times_hop_delay():
+    # router_delay=3 + 1-cycle link = 4 cycles per hop, as in BookSim's default pipeline.
+    cfg = SimConfig(routing="dor", num_vcs=2, router_delay=3, warmup=200, measure=3000, seed=5)
+    r = simulate(mesh(6), "uniform", 0.005, cfg)
+    assert r.avg_latency == pytest.approx(4 * r.avg_hops, rel=0.03)
+
+
+def test_dor_is_minimal_on_mesh_and_torus():
+    for topo in (mesh(6), torus(6)):
+        r = simulate(topo, "uniform", 0.01, SimConfig(routing="dor", num_vcs=2, warmup=200, measure=2000))
+        from nocsim.metrics import summary
+        assert r.avg_hops == pytest.approx(summary(topo)["avg_hops"], rel=0.05)
+
+
+def test_dor_torus_with_dateline_survives_overload():
+    cfg = SimConfig(routing="dor", num_vcs=2, warmup=200, measure=800, drain_limit=1500)
+    r = simulate(torus(6), "uniform", 1.0, cfg)
+    assert not r.deadlocked
+
+
+def test_dor_rejects_unsupported_setups():
+    with pytest.raises(ValueError):
+        simulate(modified_torus(6), "uniform", 0.1, SimConfig(routing="dor"))
+    with pytest.raises(ValueError):
+        simulate(torus(6), "uniform", 0.1, SimConfig(routing="dor", num_vcs=3))

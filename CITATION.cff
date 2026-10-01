@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite the preprint below."
+title: "nocsim: simulation and topology search for 2D Networks-on-Chip"
+authors:
+  - family-names: Ray
+    given-names: Rahul
+    email: rahulrayconnect@gmail.com
+    affiliation: "Assam University (alumnus)"
+repository-code: "https://github.com/R4hulR/nocsim"
+license: MIT
+type: software
+keywords:
+  - network-on-chip
+  - torus topology
+  - deadlock-free routing
+  - cycle-level simulation
+  - simulated annealing
+  - reinforcement learning
+preferred-citation:
+  type: article
+  title: "Less Wire, Less Throughput: Re-evaluating a Boundary-Folded Torus Network-on-Chip"
+  authors:
+    - family-names: Ray
+      given-names: Rahul
+  year: 2026
+  publisher:
+    name: Zenodo
+  doi: "10.5281/zenodo.23076306"
+  url: "https://doi.org/10.5281/zenodo.23076306"

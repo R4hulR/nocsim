@@ -1,4 +1,5 @@
 \documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts % allows \thanks in conference mode
 
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
@@ -12,11 +13,13 @@
 
 \begin{document}
 
-\title{Less Wire, Less Throughput: Re-evaluating a\\Boundary-Folded Torus Network-on-Chip}
+\title{Less Wire, Less Throughput: Re-evaluating a\\Boundary-Folded Torus Network-on-Chip%
+\thanks{Preprint. DOI: \href{https://doi.org/10.5281/zenodo.23076306}{10.5281/zenodo.23076306}}}
 
-\author{\IEEEauthorblockN{[Your Name]}
-\IEEEauthorblockA{B.Tech.\ in Computer Science and Engineering, Assam University, Silchar, India\\
-your.email@example.com}}
+\author{\IEEEauthorblockN{Rahul Ray}
+\IEEEauthorblockA{B.Tech.\ CSE (2023), Assam University\\
+Silchar, India\\
+rahulrayconnect@gmail.com}}
 
 \maketitle
 
@@ -38,7 +41,9 @@ replace it with adaptive routing over an up*/down* escape channel. Finally, we
 treat the placement of boundary links as a search problem. Simulated annealing,
 REINFORCE and random search, given the same evaluation budget, find no layout
 that beats the hand design at its own wire budget. They do trace out a steep
-wire/throughput frontier between it and the torus.
+wire/throughput frontier between it and the torus. Our simulator matches
+BookSim to within a few percent wherever each traffic class has at least two
+virtual channels.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -79,6 +84,9 @@ contributions are:
   \item A demonstration that the original routing deadlocks, both from its
         channel dependency graph and in simulation, and a deadlock-free
         replacement that works on any topology (Section~\ref{sec:deadlock}).
+  \item A validation of our simulator against BookSim, including one
+        modelling difference that we trace to its cause
+        (Section~\ref{sec:validation}).
   \item A formulation of boundary-link placement as a matching problem, with a
         comparison of random search, simulated annealing and policy-gradient
         reinforcement learning on it (Section~\ref{sec:search}).
@@ -91,7 +99,7 @@ well. None of our search methods found a better layout with the same amount of
 wire.
 
 The simulator, experiments and all raw results are available as open-source
-code.\footnote{[repository URL]}
+code.\footnote{\url{https://github.com/R4hulR/nocsim}}
 
 % ---------------------------------------------------------------------------
 \section{Background}
@@ -202,11 +210,12 @@ condition requires.
 \subsection{Cycle-level simulator}
 \label{sec:simulator}
 
-We wrote a cycle-level simulator in Python (under 400 lines), modelled on the
+We wrote a cycle-level simulator in Python (about 400 lines), modelled on the
 methodology of~\cite{dally2004principles}. Tools such as BookSim~\cite{jiang2013booksim}
 or Garnet~\cite{agarwal2009garnet} would also work. We wanted irregular,
 searched topologies and the escape scheme above, and a small simulator we could
-read end to end was easier to verify. Each router is input-queued, with $V=3$
+read end to end was easier to verify. We check it against BookSim in
+Section~\ref{sec:validation}. Each router is input-queued, with $V=3$
 VCs per port and 4-packet buffers per VC, and uses credit-based flow control.
 Each cycle, each output port and each input port forwards at most one packet,
 and the allocator rotates its starting input for fairness. A hop costs one
@@ -342,6 +351,46 @@ run at 20\% and above, typically within a few hundred cycles. The adaptive
 scheme never deadlocked, including at injection rates of 0.6 and 1.0, far past
 saturation. Every simulation result below uses it.
 
+\subsection{Simulator validation}
+\label{sec:validation}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.86\textwidth]{booksim_validation.png}
+  \caption{Our simulator (red) against BookSim 2 (grey, dashed) with
+  dimension-order routing on $8\times8$ networks, averaged over three seeds.
+  The curves agree whenever each traffic class has at least two VCs (top and
+  bottom rows). With one VC per dateline class (middle row) our simulator
+  saturates later.}
+  \label{fig:booksim}
+\end{figure*}
+
+A custom simulator needs an outside check. BookSim~\cite{jiang2013booksim}
+cannot run our escape-channel routing, so the comparison uses routing both
+simulators support. We added dimension-order routing to our simulator,
+following BookSim's \texttt{dim\_order\_mesh} and \texttt{dim\_order\_torus},
+including its rule for splitting VCs between the two sides of the torus
+dateline. We matched the remaining settings: 4-packet buffers, single-flit
+packets, Bernoulli injection, 1-cycle links, and a router delay chosen so that
+both simulators charge 4 cycles per hop. BookSim also adds 6 cycles per packet
+for injection and ejection, and lets nodes send packets to themselves (1/64 of
+uniform traffic and 1/8 of transpose). We corrected for both explicitly rather
+than tuning parameters until the curves met.
+
+Fig.~\ref{fig:booksim} shows the result for three traffic patterns. On the mesh
+with 2 VCs and the torus with 4 VCs, zero-load latency agrees to within 2\%,
+the mean latency error below saturation is 0.2--3.2\%, and saturation points
+differ by at most 0.06 packets/node/cycle (0.56 against 0.62 on the uniform
+torus, and within 0.02 elsewhere). On the torus with 2 VCs, where each
+dateline class has a single VC, our simulator saturates much later: 0.42
+against 0.30 under uniform traffic. A mesh with one VC shows a similar gap:
+BookSim is unstable at 0.20, while our simulator stays stable up to 0.25. The cause is that in BookSim each packet must win VC
+allocation and then switch allocation, so a single VC cannot forward packets
+back to back every cycle; our simulator allows it to. Our numbers are
+therefore optimistic whenever a traffic class has only one VC. The main
+experiments use three VCs, one for escape and two adaptive, which is the
+regime where the two simulators agree.
+
 \subsection{Cycle-level performance}
 \label{sec:sim}
 
@@ -433,7 +482,7 @@ Modified torus (hand)& $0.37$          & 0.63 & 4.13 \\
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.85\textwidth]{frontier.png}
+  \includegraphics[width=0.74\textwidth]{frontier.png}
   \caption{Best design found for each wire budget (green), compared with the
   three reference topologies. Throughput is the mean of the four per-pattern
   estimates relative to the torus.}
@@ -462,7 +511,7 @@ leaving ports idle would sometimes be the better choice.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.8\textwidth]{searched_topology.png}
+  \includegraphics[width=0.7\textwidth]{searched_topology.png}
   \caption{The modified torus (left), the best 208-tile design found by
   annealing (centre), and the torus (right).}
   \label{fig:searched}
@@ -489,9 +538,10 @@ Our wire model is the Manhattan length on a flat floorplan. A folded layout
 would change the comparison with the torus, and we have no area or power model
 beyond counting wire tiles. The simulator uses single-flit packets and a simple
 greedy allocator, so absolute numbers should not be compared with
-wormhole-switched results from BookSim or Garnet. We have checked it against
-closed-form torus results and against our own analytical estimates, but not
-against those tools. All traffic is synthetic. Whether the modified torus is
+wormhole-switched results from BookSim or Garnet. Its one known gap with
+BookSim, single-VC throughput (Section~\ref{sec:validation}), makes it
+optimistic for configurations with one VC per traffic class. All traffic is
+synthetic. Whether the modified torus is
 worth building depends on whether real workloads look more like tornado or
 like bit-complement, and that needs application traces. Finally, the search
 covers only boundary-link layouts at radix 4 on an $8\times8$ grid.
@@ -515,9 +565,6 @@ The modified torus topology was first proposed in a B.Tech.\ thesis at Assam
 University with S.~Sharma and B.~R.~S.~Satyanarayana, supervised by
 Dr.~A.~Biswas~\cite{thesis2023}. The generalisation, simulator, deadlock
 analysis, search and all experiments in this paper are new.
-% Suggested disclosure, adjust to describe your actual workflow:
-% An AI coding assistant was used during software development and drafting; the
-% author reviewed, verified and takes responsibility for all code, results and text.
 
 % ---------------------------------------------------------------------------
 \begin{thebibliography}{99}

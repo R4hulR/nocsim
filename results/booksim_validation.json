@@ -1,0 +1,92 @@
+[
+  {
+    "topology": "mesh",
+    "vcs": 2,
+    "pattern": "uniform",
+    "zero_load_booksim": 26.890133333333335,
+    "zero_load_nocsim": 27.040076288753422,
+    "saturation_booksim": 0.36,
+    "saturation_nocsim": 0.38,
+    "mean_abs_latency_error_pct": 3.1813697020473786
+  },
+  {
+    "topology": "mesh",
+    "vcs": 2,
+    "pattern": "transpose",
+    "zero_load_booksim": 27.219399999999997,
+    "zero_load_nocsim": 26.95081179210737,
+    "saturation_booksim": 0.14,
+    "saturation_nocsim": 0.14,
+    "mean_abs_latency_error_pct": 0.8125906719206537
+  },
+  {
+    "topology": "mesh",
+    "vcs": 2,
+    "pattern": "bit_complement",
+    "zero_load_booksim": 37.854533333333336,
+    "zero_load_nocsim": 38.047238080260435,
+    "saturation_booksim": 0.22,
+    "saturation_nocsim": 0.2,
+    "mean_abs_latency_error_pct": 0.18714424911064365
+  },
+  {
+    "topology": "torus",
+    "vcs": 2,
+    "pattern": "uniform",
+    "zero_load_booksim": 22.064566666666668,
+    "zero_load_nocsim": 22.186146313428917,
+    "saturation_booksim": 0.3,
+    "saturation_nocsim": 0.42,
+    "mean_abs_latency_error_pct": 8.400476640752988
+  },
+  {
+    "topology": "torus",
+    "vcs": 2,
+    "pattern": "transpose",
+    "zero_load_booksim": 22.1339,
+    "zero_load_nocsim": 21.77511601466864,
+    "saturation_booksim": 0.12,
+    "saturation_nocsim": 0.2,
+    "mean_abs_latency_error_pct": 4.715626670062172
+  },
+  {
+    "topology": "torus",
+    "vcs": 2,
+    "pattern": "bit_complement",
+    "zero_load_booksim": 21.989,
+    "zero_load_nocsim": 22.02618852529697,
+    "saturation_booksim": 0.2,
+    "saturation_nocsim": 0.32,
+    "mean_abs_latency_error_pct": 7.700353227109847
+  },
+  {
+    "topology": "torus",
+    "vcs": 4,
+    "pattern": "uniform",
+    "zero_load_booksim": 22.010166666666667,
+    "zero_load_nocsim": 22.186146313428917,
+    "saturation_booksim": 0.56,
+    "saturation_nocsim": 0.62,
+    "mean_abs_latency_error_pct": 2.6890083471204886
+  },
+  {
+    "topology": "torus",
+    "vcs": 4,
+    "pattern": "transpose",
+    "zero_load_booksim": 22.116366666666664,
+    "zero_load_nocsim": 21.773025258981445,
+    "saturation_booksim": 0.26,
+    "saturation_nocsim": 0.26,
+    "mean_abs_latency_error_pct": 2.8958729453743453
+  },
+  {
+    "topology": "torus",
+    "vcs": 4,
+    "pattern": "bit_complement",
+    "zero_load_booksim": 21.967533333333332,
+    "zero_load_nocsim": 22.02618852529697,
+    "saturation_booksim": 0.4,
+    "saturation_nocsim": 0.42,
+    "mean_abs_latency_error_pct": 1.2184653545898363
+  }
+]

@@ -138,6 +138,22 @@ class RoutingTables:
         return self.updown_dist[t][s][UP_PHASE]
 
 
+def grid_kind(topo: Topology) -> str:
+    """'mesh' or 'torus' if ``topo`` is exactly one of them, else 'other'.
+
+    Dimension-order routing (``dor``) only makes sense on these two, because
+    it relies on every router having a +/- neighbour in each dimension.
+    """
+    from .topology import mesh, torus
+
+    edges = set(topo.edges)
+    if edges == set(mesh(topo.n).edges):
+        return "mesh"
+    if topo.n >= 3 and edges == set(torus(topo.n).edges):
+        return "torus"
+    return "other"
+
+
 # ---------------------------------------------------------------------------
 # Deadlock analysis
 # ---------------------------------------------------------------------------
