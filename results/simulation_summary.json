@@ -1,0 +1,290 @@
+[
+  {
+    "wire_model": "unit",
+    "pattern": "uniform",
+    "topology": "Mesh",
+    "zero_load_latency": 10.565603763721903,
+    "saturation": 0.40058333333333335,
+    "estimate": 0.3682005680972246,
+    "zero_load_wire": 5.273392577104025
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "uniform",
+    "topology": "Torus",
+    "zero_load_latency": 8.110587002096436,
+    "saturation": 0.72396875,
+    "estimate": 0.9843749999999999,
+    "zero_load_wire": 7.082285115303983
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "uniform",
+    "topology": "Modified torus",
+    "zero_load_latency": 8.288611544461778,
+    "saturation": 0.3983125,
+    "estimate": 0.4259421780270636,
+    "zero_load_wire": 6.85179407176287
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "uniform",
+    "topology": "Searched (wire 208)",
+    "zero_load_latency": 7.513354700854701,
+    "saturation": 0.45080729166666667,
+    "estimate": 0.5091061712029451,
+    "zero_load_wire": 7.346153846153846
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "transpose",
+    "topology": "Mesh",
+    "zero_load_latency": 11.770708283313326,
+    "saturation": 0.3285,
+    "estimate": 0.32691051600261267,
+    "zero_load_wire": 5.883553421368547
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "transpose",
+    "topology": "Torus",
+    "zero_load_latency": 9.173065204143814,
+    "saturation": 0.524109375,
+    "estimate": 0.6140350877192983,
+    "zero_load_wire": 8.23034734917733
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "transpose",
+    "topology": "Modified torus",
+    "zero_load_latency": 8.523809523809524,
+    "saturation": 0.3046510416666667,
+    "estimate": 0.40103570783404585,
+    "zero_load_wire": 7.507936507936508
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "transpose",
+    "topology": "Searched (wire 208)",
+    "zero_load_latency": 6.645299145299146,
+    "saturation": 0.2845729166666667,
+    "estimate": 0.4083769633507853,
+    "zero_load_wire": 8.10989010989011
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "bit_complement",
+    "topology": "Mesh",
+    "zero_load_latency": 16.01248699271592,
+    "saturation": 0.1741875,
+    "estimate": 0.10501205557980724,
+    "zero_load_wire": 7.9937565036420395
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "bit_complement",
+    "topology": "Torus",
+    "zero_load_latency": 7.9947396107311945,
+    "saturation": 0.32424479166666664,
+    "estimate": 0.3225806451612903,
+    "zero_load_wire": 10.176749079431877
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "bit_complement",
+    "topology": "Modified torus",
+    "zero_load_latency": 10.325133689839571,
+    "saturation": 0.09925520833333333,
+    "estimate": 0.13809990205680706,
+    "zero_load_wire": 11.075935828877006
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "bit_complement",
+    "topology": "Searched (wire 208)",
+    "zero_load_latency": 9.335117773019272,
+    "saturation": 0.2004375,
+    "estimate": 0.21406727828746175,
+    "zero_load_wire": 12.16595289079229
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "tornado",
+    "topology": "Mesh",
+    "zero_load_latency": 7.501336183858899,
+    "saturation": 0.27594270833333334,
+    "estimate": 0.3333333333333333,
+    "zero_load_wire": 3.745056119722074
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "tornado",
+    "topology": "Torus",
+    "zero_load_latency": 6.039720880300591,
+    "saturation": 0.2502447916666667,
+    "estimate": 0.3333333333333333,
+    "zero_load_wire": 5.422973698336017
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "tornado",
+    "topology": "Modified torus",
+    "zero_load_latency": 6.708732694355698,
+    "saturation": 0.373609375,
+    "estimate": 0.3333333333333333,
+    "zero_load_wire": 4.578274760383387
+  },
+  {
+    "wire_model": "unit",
+    "pattern": "tornado",
+    "topology": "Searched (wire 208)",
+    "zero_load_latency": 6.788410419989368,
+    "saturation": 0.27694270833333334,
+    "estimate": 0.3333333333333333,
+    "zero_load_wire": 5.270069112174375
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "uniform",
+    "topology": "Mesh",
+    "zero_load_latency": 10.565603763721903,
+    "saturation": 0.40058333333333335,
+    "estimate": 0.3682005680972246,
+    "zero_load_wire": 5.273392577104025
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "uniform",
+    "topology": "Torus",
+    "zero_load_latency": 9.6053050397878,
+    "saturation": 0.7239427083333333,
+    "estimate": 0.9843749999999999,
+    "zero_load_wire": 7.023342175066313
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "uniform",
+    "topology": "Modified torus",
+    "zero_load_latency": 9.392364793213149,
+    "saturation": 0.398375,
+    "estimate": 0.4259421780270636,
+    "zero_load_wire": 6.581124072110287
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "uniform",
+    "topology": "Searched (wire 208)",
+    "zero_load_latency": 9.492046659597031,
+    "saturation": 0.44873958333333336,
+    "estimate": 0.5091061712029451,
+    "zero_load_wire": 7.6802757158006365
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "transpose",
+    "topology": "Mesh",
+    "zero_load_latency": 11.770708283313326,
+    "saturation": 0.3285,
+    "estimate": 0.32691051600261267,
+    "zero_load_wire": 5.883553421368547
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "transpose",
+    "topology": "Torus",
+    "zero_load_latency": 10.647094068304375,
+    "saturation": 0.5238645833333333,
+    "estimate": 0.6140350877192983,
+    "zero_load_wire": 7.805871779508688
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "transpose",
+    "topology": "Modified torus",
+    "zero_load_latency": 10.224264705882353,
+    "saturation": 0.30595833333333333,
+    "estimate": 0.40103570783404585,
+    "zero_load_wire": 7.572303921568627
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "transpose",
+    "topology": "Searched (wire 208)",
+    "zero_load_latency": 8.730958230958231,
+    "saturation": 0.283921875,
+    "estimate": 0.4083769633507853,
+    "zero_load_wire": 7.875921375921376
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "bit_complement",
+    "topology": "Mesh",
+    "zero_load_latency": 16.01248699271592,
+    "saturation": 0.1741875,
+    "estimate": 0.10501205557980724,
+    "zero_load_wire": 7.9937565036420395
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "bit_complement",
+    "topology": "Torus",
+    "zero_load_latency": 11.055673382820785,
+    "saturation": 0.32584375,
+    "estimate": 0.3225806451612903,
+    "zero_load_wire": 10.042417815482503
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "bit_complement",
+    "topology": "Modified torus",
+    "zero_load_latency": 13.53064431639602,
+    "saturation": 0.10000520833333333,
+    "estimate": 0.13809990205680706,
+    "zero_load_wire": 11.434258774227343
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "bit_complement",
+    "topology": "Searched (wire 208)",
+    "zero_load_latency": 12.922133333333333,
+    "saturation": 0.20043229166666668,
+    "estimate": 0.21406727828746175,
+    "zero_load_wire": 12.081066666666667
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "tornado",
+    "topology": "Mesh",
+    "zero_load_latency": 7.501336183858899,
+    "saturation": 0.27594270833333334,
+    "estimate": 0.3333333333333333,
+    "zero_load_wire": 3.745056119722074
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "tornado",
+    "topology": "Torus",
+    "zero_load_latency": 7.154907161803713,
+    "saturation": 0.2506979166666667,
+    "estimate": 0.3333333333333333,
+    "zero_load_wire": 5.268435013262599
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "tornado",
+    "topology": "Modified torus",
+    "zero_load_latency": 7.365138592750533,
+    "saturation": 0.3746875,
+    "estimate": 0.3333333333333333,
+    "zero_load_wire": 4.5106609808102345
+  },
+  {
+    "wire_model": "wire",
+    "pattern": "tornado",
+    "topology": "Searched (wire 208)",
+    "zero_load_latency": 7.7312633832976445,
+    "saturation": 0.27636979166666664,
+    "estimate": 0.3333333333333333,
+    "zero_load_wire": 5.237687366167023
+  }
+]

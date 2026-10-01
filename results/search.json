@@ -1,0 +1,703 @@
+{
+  "method_comparison": {
+    "random": {
+      "score_mean": -0.034490305579042015,
+      "score_std": 0.07583848433779702,
+      "thr_mean": 0.415064137780333,
+      "hops_mean": 3.9208002645502646
+    },
+    "annealing": {
+      "score_mean": 0.343663020987606,
+      "score_std": 0.016487600603266688,
+      "thr_mean": 0.591893001456356,
+      "hops_mean": 4.034722222222222
+    },
+    "reinforce": {
+      "score_mean": 0.2472417337199111,
+      "score_std": 0.028483496477028383,
+      "thr_mean": 0.4995102070272028,
+      "hops_mean": 4.100363756613756
+    }
+  },
+  "modified_score": 0.37433164861785556,
+  "frontier": [
+    {
+      "topology": "Searched",
+      "n": 8,
+      "nodes": 64,
+      "links": 128,
+      "max_radix": 4,
+      "diameter": 10,
+      "avg_hops": 4.577876984126984,
+      "avg_hops_traffic": 4.577876984126983,
+      "total_wire": 152,
+      "max_link_length": 4,
+      "max_channel_load": 2.552612174371525,
+      "throughput_est": 0.3917555553640688,
+      "wire_per_packet": 5.756004712775168,
+      "throughput_est_uniform": 0.3917555553640688,
+      "throughput_est_transpose": 0.16247311134295356,
+      "throughput_est_bit_complement": 0.13163159158197968,
+      "throughput_est_tornado": 0.3333333333333333,
+      "throughput_rel_torus": 0.5176577246152702,
+      "budget": 152,
+      "method": "annealing",
+      "extra_links": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          6,
+          15
+        ],
+        [
+          7,
+          23
+        ],
+        [
+          7,
+          39
+        ],
+        [
+          16,
+          32
+        ],
+        [
+          24,
+          40
+        ],
+        [
+          31,
+          63
+        ],
+        [
+          47,
+          63
+        ],
+        [
+          48,
+          57
+        ],
+        [
+          55,
+          62
+        ],
+        [
+          56,
+          58
+        ],
+        [
+          56,
+          60
+        ],
+        [
+          59,
+          61
+        ]
+      ]
+    },
+    {
+      "topology": "Searched",
+      "n": 8,
+      "nodes": 64,
+      "links": 128,
+      "max_radix": 4,
+      "diameter": 9,
+      "avg_hops": 4.3000992063492065,
+      "avg_hops_traffic": 4.300099206349208,
+      "total_wire": 160,
+      "max_link_length": 5,
+      "max_channel_load": 2.9005948742349106,
+      "throughput_est": 0.34475686655957766,
+      "wire_per_packet": 6.046382699377996,
+      "throughput_est_uniform": 0.34475686655957766,
+      "throughput_est_transpose": 0.19633507853403143,
+      "throughput_est_bit_complement": 0.18398309309339037,
+      "throughput_est_tornado": 0.3076923076923077,
+      "throughput_rel_torus": 0.5408498521920233,
+      "budget": 160,
+      "method": "annealing",
+      "extra_links": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          24
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          3,
+          6
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          7,
+          31
+        ],
+        [
+          8,
+          40
+        ],
+        [
+          15,
+          47
+        ],
+        [
+          16,
+          32
+        ],
+        [
+          23,
+          63
+        ],
+        [
+          39,
+          63
+        ],
+        [
+          48,
+          57
+        ],
+        [
+          55,
+          61
+        ],
+        [
+          56,
+          58
+        ],
+        [
+          56,
+          60
+        ],
+        [
+          59,
+          62
+        ]
+      ]
+    },
+    {
+      "topology": "Searched",
+      "n": 8,
+      "nodes": 64,
+      "links": 128,
+      "max_radix": 4,
+      "diameter": 8,
+      "avg_hops": 4.130952380952381,
+      "avg_hops_traffic": 4.130952380952385,
+      "total_wire": 176,
+      "max_link_length": 7,
+      "max_channel_load": 2.347736504123482,
+      "throughput_est": 0.4259421780270636,
+      "wire_per_packet": 6.660028265993893,
+      "throughput_est_uniform": 0.4259421780270636,
+      "throughput_est_transpose": 0.40103570783404585,
+      "throughput_est_bit_complement": 0.13809990205680706,
+      "throughput_est_tornado": 0.3333333333333333,
+      "throughput_rel_torus": 0.6284820392428556,
+      "budget": 176,
+      "method": "annealing_warm",
+      "extra_links": [
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          56
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          6
+        ],
+        [
+          7,
+          63
+        ],
+        [
+          8,
+          32
+        ],
+        [
+          15,
+          39
+        ],
+        [
+          16,
+          40
+        ],
+        [
+          23,
+          47
+        ],
+        [
+          24,
+          48
+        ],
+        [
+          31,
+          55
+        ],
+        [
+          56,
+          63
+        ],
+        [
+          57,
+          60
+        ],
+        [
+          58,
+          61
+        ],
+        [
+          59,
+          62
+        ]
+      ]
+    },
+    {
+      "topology": "Searched",
+      "n": 8,
+      "nodes": 64,
+      "links": 128,
+      "max_radix": 4,
+      "diameter": 8,
+      "avg_hops": 3.839781746031746,
+      "avg_hops_traffic": 3.839781746031744,
+      "total_wire": 192,
+      "max_link_length": 10,
+      "max_channel_load": 2.1712416624275077,
+      "throughput_est": 0.46056595970158964,
+      "wire_per_packet": 7.17157675666998,
+      "throughput_est_uniform": 0.46056595970158964,
+      "throughput_est_transpose": 0.3333333333333333,
+      "throughput_est_bit_complement": 0.17994858611825193,
+      "throughput_est_tornado": 0.3333333333333333,
+      "throughput_rel_torus": 0.6421435725785569,
+      "budget": 192,
+      "method": "annealing",
+      "extra_links": [
+        [
+          0,
+          6
+        ],
+        [
+          0,
+          32
+        ],
+        [
+          1,
+          57
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          3,
+          56
+        ],
+        [
+          4,
+          23
+        ],
+        [
+          5,
+          8
+        ],
+        [
+          7,
+          63
+        ],
+        [
+          15,
+          62
+        ],
+        [
+          16,
+          40
+        ],
+        [
+          24,
+          56
+        ],
+        [
+          31,
+          47
+        ],
+        [
+          39,
+          55
+        ],
+        [
+          48,
+          60
+        ],
+        [
+          58,
+          61
+        ],
+        [
+          59,
+          63
+        ]
+      ]
+    },
+    {
+      "topology": "Searched",
+      "n": 8,
+      "nodes": 64,
+      "links": 128,
+      "max_radix": 4,
+      "diameter": 7,
+      "avg_hops": 3.793154761904762,
+      "avg_hops_traffic": 3.793154761904761,
+      "total_wire": 208,
+      "max_link_length": 9,
+      "max_channel_load": 1.9642268284376578,
+      "throughput_est": 0.5091061712029451,
+      "wire_per_packet": 7.386435937926426,
+      "throughput_est_uniform": 0.5091061712029451,
+      "throughput_est_transpose": 0.4083769633507853,
+      "throughput_est_bit_complement": 0.21406727828746175,
+      "throughput_est_tornado": 0.3333333333333333,
+      "throughput_rel_torus": 0.7114667097076204,
+      "budget": 208,
+      "method": "annealing_warm",
+      "extra_links": [
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          56
+        ],
+        [
+          1,
+          23
+        ],
+        [
+          2,
+          8
+        ],
+        [
+          3,
+          15
+        ],
+        [
+          4,
+          40
+        ],
+        [
+          5,
+          32
+        ],
+        [
+          6,
+          62
+        ],
+        [
+          7,
+          63
+        ],
+        [
+          16,
+          58
+        ],
+        [
+          24,
+          56
+        ],
+        [
+          31,
+          47
+        ],
+        [
+          39,
+          61
+        ],
+        [
+          48,
+          63
+        ],
+        [
+          55,
+          59
+        ],
+        [
+          57,
+          60
+        ]
+      ]
+    },
+    {
+      "topology": "Searched",
+      "n": 8,
+      "nodes": 64,
+      "links": 128,
+      "max_radix": 4,
+      "diameter": 8,
+      "avg_hops": 4.063492063492063,
+      "avg_hops_traffic": 4.063492063492051,
+      "total_wire": 224,
+      "max_link_length": 7,
+      "max_channel_load": 1.015873015873016,
+      "throughput_est": 0.9843749999999999,
+      "wire_per_packet": 7.111111111111095,
+      "throughput_est_uniform": 0.9843749999999999,
+      "throughput_est_transpose": 0.6140350877192983,
+      "throughput_est_bit_complement": 0.3225806451612903,
+      "throughput_est_tornado": 0.3333333333333333,
+      "throughput_rel_torus": 1.0,
+      "budget": 224,
+      "method": "annealing_warm",
+      "extra_links": [
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          56
+        ],
+        [
+          1,
+          57
+        ],
+        [
+          2,
+          58
+        ],
+        [
+          3,
+          59
+        ],
+        [
+          4,
+          60
+        ],
+        [
+          5,
+          61
+        ],
+        [
+          6,
+          62
+        ],
+        [
+          7,
+          63
+        ],
+        [
+          8,
+          15
+        ],
+        [
+          16,
+          23
+        ],
+        [
+          24,
+          31
+        ],
+        [
+          32,
+          39
+        ],
+        [
+          40,
+          47
+        ],
+        [
+          48,
+          55
+        ],
+        [
+          56,
+          63
+        ]
+      ]
+    },
+    {
+      "topology": "Searched",
+      "n": 8,
+      "nodes": 64,
+      "links": 128,
+      "max_radix": 4,
+      "diameter": 8,
+      "avg_hops": 4.063492063492063,
+      "avg_hops_traffic": 4.063492063492051,
+      "total_wire": 224,
+      "max_link_length": 7,
+      "max_channel_load": 1.015873015873016,
+      "throughput_est": 0.9843749999999999,
+      "wire_per_packet": 7.111111111111095,
+      "throughput_est_uniform": 0.9843749999999999,
+      "throughput_est_transpose": 0.6140350877192983,
+      "throughput_est_bit_complement": 0.3225806451612903,
+      "throughput_est_tornado": 0.3333333333333333,
+      "throughput_rel_torus": 1.0,
+      "budget": 256,
+      "method": "annealing_warm",
+      "extra_links": [
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          56
+        ],
+        [
+          1,
+          57
+        ],
+        [
+          2,
+          58
+        ],
+        [
+          3,
+          59
+        ],
+        [
+          4,
+          60
+        ],
+        [
+          5,
+          61
+        ],
+        [
+          6,
+          62
+        ],
+        [
+          7,
+          63
+        ],
+        [
+          8,
+          15
+        ],
+        [
+          16,
+          23
+        ],
+        [
+          24,
+          31
+        ],
+        [
+          32,
+          39
+        ],
+        [
+          40,
+          47
+        ],
+        [
+          48,
+          55
+        ],
+        [
+          56,
+          63
+        ]
+      ]
+    }
+  ],
+  "baselines": [
+    {
+      "topology": "Mesh",
+      "n": 8,
+      "nodes": 64,
+      "links": 112,
+      "max_radix": 4,
+      "diameter": 14,
+      "avg_hops": 5.333333333333333,
+      "avg_hops_traffic": 5.333333333333332,
+      "total_wire": 112,
+      "max_link_length": 1,
+      "max_channel_load": 2.71591107305393,
+      "throughput_est": 0.3682005680972246,
+      "wire_per_packet": 5.333333333333332,
+      "throughput_est_uniform": 0.3682005680972246,
+      "throughput_est_transpose": 0.32691051600261267,
+      "throughput_est_bit_complement": 0.10501205557980724,
+      "throughput_est_tornado": 0.3333333333333333,
+      "throughput_rel_torus": 0.5579948799794714
+    },
+    {
+      "topology": "Torus",
+      "n": 8,
+      "nodes": 64,
+      "links": 128,
+      "max_radix": 4,
+      "diameter": 8,
+      "avg_hops": 4.063492063492063,
+      "avg_hops_traffic": 4.063492063492051,
+      "total_wire": 224,
+      "max_link_length": 7,
+      "max_channel_load": 1.015873015873016,
+      "throughput_est": 0.9843749999999999,
+      "wire_per_packet": 7.111111111111095,
+      "throughput_est_uniform": 0.9843749999999999,
+      "throughput_est_transpose": 0.6140350877192983,
+      "throughput_est_bit_complement": 0.3225806451612903,
+      "throughput_est_tornado": 0.3333333333333333,
+      "throughput_rel_torus": 1.0
+    },
+    {
+      "topology": "Modified torus",
+      "n": 8,
+      "nodes": 64,
+      "links": 128,
+      "max_radix": 4,
+      "diameter": 8,
+      "avg_hops": 4.130952380952381,
+      "avg_hops_traffic": 4.130952380952385,
+      "total_wire": 176,
+      "max_link_length": 7,
+      "max_channel_load": 2.347736504123482,
+      "throughput_est": 0.4259421780270636,
+      "wire_per_packet": 6.660028265993893,
+      "throughput_est_uniform": 0.4259421780270636,
+      "throughput_est_transpose": 0.40103570783404585,
+      "throughput_est_bit_complement": 0.13809990205680706,
+      "throughput_est_tornado": 0.3333333333333333,
+      "throughput_rel_torus": 0.6284820392428556
+    }
+  ]
+}
