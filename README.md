@@ -1,213 +1,167 @@
-# Revisiting the Modified Torus Network-on-Chip
+# Where Should the Long Wires Go?
 
-**Wire length, throughput and deadlock in a hand-designed NoC topology, evaluated with a cycle-level simulator and automated topology search**
+**Total-wire, longest-wire and performance trade-offs in radix-4 on-chip networks: a design-space study with a BookSim-validated simulator, PARSEC traces and DSENT area/energy/timing models**
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23076306.svg)](https://doi.org/10.5281/zenodo.23076306)
 
-Rahul Ray · Paper: [`paper/main.pdf`](paper/main.pdf) · Preprint: [doi.org/10.5281/zenodo.23076306](https://doi.org/10.5281/zenodo.23076306)
-
-This repository revisits a Network-on-Chip (NoC) topology proposed in a 2023 B.Tech thesis and evaluates it rigorously. The original work proposed a "modified torus" and claimed it beats mesh and torus on hop count, latency and throughput, but it measured only BFS hop counts on a single 5×5 grid. This version:
-
-1. **generalises** the topology from a hand-written 5×5 adjacency list to a rule for any *n×n* grid;
-2. **adds the missing metrics**: physical wire length and channel-load throughput;
-3. **shows that the original BFS routing can deadlock**, proves it with channel-dependency graphs, observes it in simulation, and replaces it with a provably deadlock-free adaptive scheme;
-4. **builds a cycle-level router simulator** to measure latency vs. load under standard synthetic traffic patterns;
-5. **turns topology design into an optimisation problem** and compares random search, simulated annealing and policy-gradient RL (REINFORCE) at finding better link layouts.
-6. **validates the simulator against BookSim 2**, the standard NoC simulator.
-
-The short answer: the modified torus is a real trade-off, not a free win. At 8×8 it saves **21% of the wire** of a torus (up to 22% at 10×10), at the cost of **≈45% lower saturation throughput** under uniform traffic. Within its wire budget, though, it is as good as anything the search found.
-
-![The three topologies at 8×8](results/figures/topologies.png)
+Rahul Ray · Current manuscript: [`paper/main.pdf`](paper/main.pdf) (prepared for submission to *Journal of Systems Architecture*) · Earlier preprint: [`paper/v1_preprint/main.pdf`](paper/v1_preprint/main.pdf), [doi.org/10.5281/zenodo.23076306](https://doi.org/10.5281/zenodo.23076306)
 
 ---
 
-## Background
+## The question
 
-The modified torus was proposed in the B.Tech thesis *"Study on BFS base routing of a New Modified Torus NoC Topology"* (S. Sharma, R. Ray, B. R. S. Satyanarayana; supervisor Dr. A. Biswas; Assam University, 2023). The original code and thesis are not included in this repository; they are available on request. Its 5×5 adjacency list is reproduced in `tests/test_topology.py`, and the generalised construction is checked against it. Everything under `nocsim/`, `experiments/` and `tests/` is a later, independent re-implementation and extension.
+A 2D mesh leaves 4n router ports unused on the boundary of an n×n grid. A torus spends them on wraparound links; edge-folded designs link boundary routers along the same edge to save wire. Long links cost twice:
 
-**The idea.** A 2D mesh leaves 4*n* router ports unused on its boundary (corners have 2 spare ports, other edge routers have 1). A torus spends them on *n*-tile-long wraparound links to the opposite edge. The modified torus keeps the wraparounds only at the corners (and the middle row/column for odd *n*). Every other boundary router is linked to a router (*n*−1)/2 positions away *along the same edge*. These links are shorter, so the network uses less wire, and every router keeps radix 4.
+* **total wire** sets wire area, repeater area and link energy;
+* **the longest wire** sets the clock, because a wire that doesn't fit in one cycle either lowers the clock or must be pipelined (the effect Kite and NetSmith build on for chiplet interposers).
 
-### What changed relative to the 2023 code
+This repository treats the use of those spare ports as a **perfect-matching design space** that contains the mesh, the torus and edge-folded designs, searches it under explicit total-wire and longest-wire constraints, and evaluates the results on an 8×8 network.
 
-| | 2023 thesis code | This repository |
+![The six evaluated designs](results/figures/paper_topologies.png)
+
+## Main results (8×8, 22 nm, 1.5 mm tiles)
+
+| Design | Total wire (tiles) | Longest link | Avg hops | Area (mm²) | Wire-limited clock |
+|---|---|---|---|---|---|
+| Mesh | 112 | 1 | 5.33 | 15.9 | 4.00 GHz |
+| Torus | 224 | 7 | 4.06 | 30.0 | 2.45 GHz |
+| Folded torus | 224 | 2 | 4.06 | 29.9 | 4.00 GHz |
+| Modified torus | 176 | 7 | 4.13 | 24.1 | 2.45 GHz |
+| **Searched (links ≤ 5)** | 180 | 5 | **3.84** | 24.5 | 3.42 GHz |
+| Searched (wire ≤ 208) | 208 | 9 | 3.79 | 28.0 | 1.86 GHz |
+
+PARSEC traces (7 benchmarks, geometric mean, relative to mesh; lower is better):
+
+| Design | Runtime, fixed 2 GHz, 10× | EDP, fixed 2 GHz, 10× | Runtime, wire-limited, 10× | EDP, wire-limited, 10× |
+|---|---|---|---|---|
+| Torus | 0.878 | 0.908 | 1.115 | 1.435 |
+| Folded torus | 0.878 | 0.864 | **0.909** | **0.926** |
+| Modified torus | 0.872 | 0.863 | 1.108 | 1.366 |
+| **Searched (links ≤ 5)** | **0.826** | **0.770** | 0.923 | 0.955 |
+| Searched (wire ≤ 208) | 0.829 | 0.796 | 1.202 | 1.628 |
+
+What the data says:
+
+1. **At a fixed clock**, the searched design whose extra links are at most 5 tiles long is the fastest evaluated design: 17% lower runtime and 23% lower energy-delay product than a mesh at 10× compression, and 10% faster than the torus and folded torus at 50×, with 20% less wire than a torus. It is best on 6 of 7 benchmarks; the seventh (vips) is insensitive to the network.
+2. **When the longest wire sets the clock**, the folded torus is the best evaluated design. The torus and modified torus, held to 2.45 GHz by 10.5 mm wraparounds, are *slower than the mesh*. The 5-link design comes second, 1.5–3% behind, with 18% less area.
+3. **Saving total wire while keeping full-length links** (the modified torus, the design this project started from) buys area but not performance.
+4. **At the traces' recorded speed** the network barely matters (all designs within 1.1% of the mesh) and every radix-4 design uses 11–17% *more* network energy than the mesh. The differences above appear when compute gaps are compressed 10–50×, emulating faster cores.
+5. **Tile pitch shifts the rankings**: at 1.0 mm tiles the 5-link design is best or tied-best under both clocking regimes; at 2.0 mm only the folded torus beats the mesh under a wire-limited clock.
+
+![Best design per longest-link limit](results/figures/link_length_search.png)
+
+![Applications at 10× compression](results/figures/applications.png)
+
+## Methodology
+
+* **Design space and search.** Perfect matchings of the 4n spare boundary ports (`nocsim/search.py`), with a total-wire budget and/or a longest-link limit. Objective: analytical throughput estimate averaged over uniform, transpose, bit-complement and tornado traffic, minus a hop-count term. Simulated annealing is compared with REINFORCE and random search at equal evaluation budgets (annealing wins; the tabular RL policy has no notion of geometry).
+* **Routing and deadlock freedom.** Minimal adaptive routing with an up*/down* escape VC. Flow control is virtual cut-through, so Duato's condition for cut-through networks (IEEE TPDS 1996) applies; the escape channel-dependency graph is checked for cycles for every design. Rerunning all applications with packets confined to the escape VC changes results by at most 0.2%. The thesis-era single-VC BFS routing deadlocks at ≥ 20% load on the torus and modified torus.
+* **Cycle-level simulator** (`nocsim/simulator.py`): input-queued routers, 3 VCs, credit-based virtual cut-through, multi-flit packets, a 2-cycle VC turnaround that reproduces BookSim's router pipeline, and activity counters for energy.
+* **Validation against BookSim 2** (`experiments/05_booksim_validation.py`): dimension-order routing on mesh and torus, 1- and 5-flit packets. Zero-load latency within 2.1%, mean latency error 0.2–5.3% and saturation within 0.06 packets/node/cycle wherever each traffic class has ≥ 2 VCs; the one-VC-per-class gap is explained and closed by the VC turnaround.
+
+  ![nocsim vs. BookSim](results/figures/booksim_validation.png)
+
+* **Application traces** (`nocsim/traces.py`): Netrace PARSEC traces (blackscholes, canneal, ferret, fluidanimate, swaptions, vips, x264), captured on a 64-core 8×8 CMP; 250k packets of each region of interest replayed with their dependencies, so completion time is a runtime proxy. Compute gaps are converted to real time with the original 2 GHz core clock so networks at different clocks compare fairly.
+* **Area, energy and timing** (`nocsim/power.py`, `tools/dsent_main/`): DSENT at 22 nm for 3-, 4- and 5-port routers (each router modelled with its real port count) and repeated global wires. One-cycle wire reach: 13.0 mm at 2 GHz, 8.5 mm at 3 GHz, 6.5 mm at 4 GHz. Two regimes: a **fixed 2 GHz clock** (long links pipelined), and a **wire-limited clock** where each network runs as fast as its longest link allows.
+* **Folded torus fairness.** The folded torus is modelled as the torus graph with the same core mapping and only its physical link lengths changed, so it receives exactly the torus's traffic.
+
+![Area and timing vs. tile pitch](results/figures/area_timing.png)
+
+## Repository layout
+
+```
+nocsim/              library: topology, metrics, routing, traffic, simulator, traces, power, search
+experiments/         01-09, one script per experiment, plus shared helpers (common.py)
+  booksim/           BookSim driver (stdlib only; runs on Linux/WSL)
+  booksim_base.cfg   BookSim configuration matched to nocsim
+tools/
+  netrace_dump/      converts Netrace .tra.bz2 traces to text for nocsim
+  dsent_main/        standalone DSENT driver and characterisation script
+tests/               pytest suite (61 tests)
+results/             raw results (CSV/JSON), figures, searched designs, DSENT data
+paper/               current manuscript (LaTeX + PDF); literature/ notes and verified references
+paper/v1_preprint/   the earlier 7-page preprint that matches the Zenodo DOI
+```
+
+| Experiment | What it does | Time* |
 |---|---|---|
-| Topology | 100 hand-written `add_neighbor` lines, 5×5 only | Rule for any *n* ≥ 5, verified to reproduce the 5×5 list exactly |
-| "Latency" | BFS hop count; `time.sleep(0.1)` per hop | Cycle-level simulation: buffers, virtual channels, credits, contention |
-| "Throughput" | `1 / hop_count` | Saturation throughput (simulated) and channel-load estimate (analytical) |
-| Wire length | not considered | Measured per link on the floorplan |
-| Simulator trust | n/a | Validated against BookSim 2 (§5) |
-| Deadlock | not considered (shortest-path routing on a torus) | CDG analysis + Duato-style adaptive routing with up*/down* escape |
-| `use_virtual_channel=True` | Only allowed neighbours with ≤ 2 links, but every node has 4, so routing always returned `None` | Real virtual channels |
-| Topology design | by hand | Searched automatically (annealing, REINFORCE, random) |
-| Tests | none | 42 `pytest` tests, including closed-form checks against textbook results |
+| `01_static_metrics.py` | hops, wire, throughput estimates vs. grid size | 10 s |
+| `02_deadlock.py` | channel-dependency-graph check + BFS deadlock in simulation | 1 min |
+| `03_topology_search.py` | search methods and total-wire frontier | 25 min |
+| `04_simulation.py` | synthetic load–latency curves, six designs, 2 and 4 GHz | 3 min |
+| `05_booksim_validation.py` | comparison with BookSim (needs `booksim_raw.json`) | 3 min |
+| `06_link_length_search.py` | best designs per longest-link limit | 11 min |
+| `07_area_timing.py` | DSENT area, clock and zero-load latency vs. tile pitch | 1 min |
+| `08_applications.py` | PARSEC traces, two clocking regimes, energy | 4 min |
+| `09_per_benchmark.py` | per-benchmark table for the paper | 1 s |
 
----
-
-## Key results
-
-All numbers are for an 8×8 network unless stated otherwise. Each row of the tables can be regenerated with the scripts in `experiments/`.
-
-### 1. The modified torus trades throughput for wire
-
-| 8×8 | Links | Diameter | Avg. hops | Total wire (tiles) | Throughput estimate, uniform |
-|---|---|---|---|---|---|
-| Mesh | 112 | 14 | 5.33 | 112 | 0.37 |
-| Torus | 128 | 8 | 4.06 | 224 | 0.98 |
-| Modified torus | 128 | 8 | 4.13 | **176 (−21%)** | **0.43 (−57%)** |
-
-![Static metrics vs. grid size](results/figures/static_metrics.png)
-
-* **Hop count is essentially unchanged.** The modified torus is slightly better at most sizes (up to −5.9% at 9×9) and slightly worse at 8×8. The thesis's hop-count improvement is real but small.
-* **Wire savings grow with size**, from 10% at 5×5 to 22% at 10×10.
-* **Throughput falls sharply.** The torus spreads uniform traffic evenly over its links. The modified torus funnels it through its folded edge links, and by 9×9 its throughput estimate drops *below the plain mesh*. The thesis didn't have a channel-load metric, so it couldn't see this.
-
-### 2. The original BFS routing deadlocks; adaptive routing with an escape channel does not
-
-Deterministic shortest-path routing on any topology with cycles can deadlock. The channel dependency graph (Dally & Seitz) confirms it is **cyclic** for both the torus and the modified torus. In simulation (8×8, uniform traffic, 5 seeds each), BFS routing with one virtual channel froze in **every run at ≥ 20% load**:
-
-| Fraction of runs deadlocked | 0.05 | 0.10 | 0.15 | 0.20 | 0.30 | 0.50 |
-|---|---|---|---|---|---|---|
-| Torus, BFS (thesis) | 0 | 0 | 0 | **1.0** | **1.0** | **1.0** |
-| Modified torus, BFS (thesis) | 0 | 0 | 0 | **1.0** | **1.0** | **1.0** |
-| Either, adaptive + up*/down* escape | 0 | 0 | 0 | 0 | 0 | 0 (also 0 at 0.6 and 1.0) |
-
-The fix is minimal adaptive routing on virtual channels 1..V−1, plus an escape channel (VC 0) that uses up*/down* routing (Duato, 1993; Schroeder et al., 1991). Up*/down* is deadlock-free on *any* connected graph, which matters because the topology search produces irregular networks. Its channel dependency graph is checked to be acyclic in the tests.
-
-### 3. Cycle-level simulation confirms the trade-off, and finds a niche
-
-Simulator setup: 3 VCs, 4-packet buffers, 1-cycle router + link, open-loop Bernoulli injection, 1000-cycle warm-up, and 3000 measured cycles drained to completion. Saturation is the highest load that still delivers ≥ 95% of the offered traffic with latency < 3× zero-load.
-
-| Saturation throughput (pkts/node/cycle) | uniform | transpose | bit-complement | tornado | zero-load latency, uniform |
-|---|---|---|---|---|---|
-| Mesh | 0.40 | 0.33 | 0.17 | 0.28 | 10.6 cycles |
-| Torus | **0.72** | **0.52** | **0.32** | 0.25 | 8.1 |
-| Modified torus | 0.40 | 0.30 | 0.10 | **0.37** | 8.3 |
-| Searched, 208 tiles (see §4) | 0.45 | 0.28 | 0.20 | 0.28 | **7.5** |
-
-![Latency vs. offered load](results/figures/latency_vs_load.png)
-
-* The modified torus has **torus-like latency at low load** (8.3 vs. 10.6 cycles for the mesh) but **mesh-like saturation throughput**.
-* When long wires are charged their real delay (bottom row: a link of length *L* takes ⌈*L*/2⌉ cycles), the modified torus has slightly *lower* zero-load latency than the torus (9.4 vs. 9.6 cycles on uniform traffic, 10.2 vs. 10.7 on transpose).
-* **Tornado traffic is the modified torus's niche**: 0.37 vs. 0.25 for the torus (+50%). **Bit-complement is its worst case**: 0.10, below even the mesh, because all traffic must cross the centre and the folded links don't help with that.
-* The simulator's throughput is typically 70–95% of the analytical estimate, and adaptive routing sometimes *beats* it (mesh, tornado), because the estimate assumes traffic is split evenly over shortest paths. It is a fast proxy, not a bound, which is why every search result is re-checked in simulation.
-
-### 4. Automated topology search: the hand design is on the frontier
-
-The 4*n* spare boundary ports can be paired in a huge number of ways. The torus and the modified torus are just two of them. The search maximises
-
-> J = mean over {uniform, transpose, bit-complement, tornado} of (throughput estimate ÷ torus's) − 0.25 × (avg. hops ÷ torus's), subject to total wire ≤ budget.
-
-**Method comparison**, at the modified torus's own budget (176 tiles), 2500 evaluations, 3 seeds:
-
-| Method | Best J (mean ± std) |
-|---|---|
-| Random search | −0.03 ± 0.08 |
-| REINFORCE (autoregressive matching policy) | 0.25 ± 0.03 |
-| Simulated annealing (cold start) | 0.34 ± 0.02 |
-| **Modified torus (hand design)** | **0.37**. Annealing *starting from* it found nothing better. |
-
-![Search convergence](results/figures/search_convergence.png)
-
-**Wire/throughput frontier** (best design found for each wire budget):
-
-![Frontier](results/figures/frontier.png)
-
-* **The modified torus sits on the empirical frontier.** At 176 tiles, no searched design beat it.
-* **An earlier, uniform-traffic-only version of the objective was misleading.** It "found" a design with a 13% higher uniform estimate at the same wire. In simulation, that design was 80% better than the modified torus on bit-complement but 16% worse on transpose. Averaging the objective over several traffic patterns fixed this. It is a small, concrete case of optimising a proxy objective and overfitting it.
-* **The frontier is steep near the torus.** Going from 208 to 224 tiles (+8% wire) raises the throughput estimate from 0.71 to 1.0 of the torus's. The searched 208-tile design (shown below) has the **lowest zero-load latency of all four networks** (7.5 cycles uniform, 6.7 transpose) and 2× the modified torus's bit-complement throughput.
-* **RL underperforms annealing here.** A tabular policy has no notion of *geometry*: it can't tell that pairing port 3 with port 7 is similar to pairing port 4 with port 8. A policy that shares structure across ports, such as a graph neural network over the floorplan, is the natural next step.
-
-![Modified torus, searched 208-tile design, torus](results/figures/searched_topology.png)
-
-### 5. The simulator agrees with BookSim
-
-A home-grown simulator is only worth trusting if it matches an established one. [BookSim 2](https://github.com/booksim/booksim2) (Jiang et al., ISPASS 2013) can't run the adaptive escape routing used above, so the check uses routing both simulators support: dimension-order routing on an 8×8 mesh and torus. `nocsim`'s `routing="dor"` re-implements BookSim's `dim_order_mesh` / `dim_order_torus`, including its dateline VC rule. Settings are matched: 4-packet buffers, single-flit packets, 1-cycle links, and `router_delay=3`, so both simulators charge 4 cycles per hop. Two known differences are corrected for openly rather than tuned away. BookSim adds 6 cycles per packet for its injection and ejection channels, and it lets a node send packets to itself (1/64 of uniform traffic, 1/8 of transpose).
-
-| Configuration | Zero-load latency | Saturation, BookSim → nocsim (uniform / transpose / bit-comp.) | Mean latency error below saturation |
-|---|---|---|---|
-| Mesh, 2 VCs | within 1% | 0.36→0.38 / 0.14→0.14 / 0.22→0.20 | 0.2–3.2% |
-| Torus, 4 VCs (2 per dateline class) | within 2% | 0.56→0.62 / 0.26→0.26 / 0.40→0.42 | 1.2–2.9% |
-| Torus, 2 VCs (1 per class) | within 2% | 0.30→0.42 / 0.12→0.20 / 0.20→0.32 | 4.7–8.4% |
-
-![nocsim vs. BookSim](results/figures/booksim_validation.png)
-
-The one real disagreement has an identified cause. In BookSim, a single VC can't forward back-to-back packets every cycle, because each packet goes through VC and switch allocation in turn. `nocsim` allows one packet per VC per cycle. When a traffic class has only one VC, `nocsim`'s saturation throughput is optimistic. With two or more VCs per class the simulators agree. The main experiments above use three VCs: one escape VC and **two adaptive VCs**, which is the regime that matched.
-
----
-
-## How it works
-
-| Module | What it does |
-|---|---|
-| `nocsim/topology.py` | Mesh, torus and modified torus builders, plus any "mesh + boundary links" design. Wire length on the floorplan. |
-| `nocsim/metrics.py` | All-pairs BFS with shortest-path counts; channel load with flows split evenly over minimal paths (vectorised with NumPy); throughput estimate including ejection limits. |
-| `nocsim/routing.py` | BFS (thesis), up*/down*, and minimal-adaptive with escape routing tables; channel-dependency-graph deadlock check. (Dimension-order routing for the BookSim comparison lives in the simulator.) |
-| `nocsim/traffic.py` | Uniform, transpose, bit-complement, tornado and hotspot patterns, as samplers (for simulation) and as matrices (for analysis). |
-| `nocsim/simulator.py` | Cycle-level input-queued router model: virtual channels, credit flow control, separable allocation, pipelined links, open-loop measurement, saturation and deadlock detection. |
-| `nocsim/search.py` | Design space of boundary-port matchings; random search, simulated annealing, REINFORCE. |
-
-**Modelling simplifications** (they apply equally to every topology): single-flit packets with virtual cut-through, not multi-flit wormhole; greedy separable allocation, not iSLIP; credits return at the end of the cycle; wire length is the Manhattan distance on the floorplan, with no folded-torus layout and no power model beyond "wire tiles crossed per packet". The results are for comparing topologies against each other, not for predicting absolute performance of a specific chip.
-
----
+\*on a 40-thread machine; experiments run in parallel processes.
 
 ## Reproducing
 
-Requires Python ≥ 3.10.
+Python ≥ 3.10:
 
 ```bash
 git clone https://github.com/R4hulR/nocsim.git
 cd nocsim
 pip install -r requirements.txt
-python -m pytest                              # 42 tests, ~20 s
-
-python experiments/01_static_metrics.py       # ~10 s
-python experiments/02_deadlock.py             # ~1 min
-python experiments/03_topology_search.py      # ~25 min on 24 cores (parallel)
-python experiments/04_simulation.py           # ~10 min on 24 cores; uses a design saved by 03
+python -m pytest                                   # 61 tests
+python experiments/01_static_metrics.py            # ... and so on, in order 01-07
 ```
 
-BookSim validation (BookSim needs Linux or WSL, plus `flex` and `bison`):
+External tools (Linux or WSL; none are stored in this repository):
 
 ```bash
+# BookSim 2 (needs flex and bison)
 git clone https://github.com/booksim/booksim2.git && make -C booksim2/src
-python3 experiments/booksim/run_booksim.py --booksim booksim2/src/booksim   # ~3 min; stdlib only
-python experiments/05_booksim_validation.py                                 # ~2 min; compares and plots
+python3 experiments/booksim/run_booksim.py --booksim booksim2/src/booksim
+python experiments/05_booksim_validation.py
+
+# DSENT, from gem5's ext/dsent, built standalone
+git clone --depth 1 --filter=blob:none --sparse https://github.com/gem5/gem5.git
+(cd gem5 && git sparse-checkout set ext/dsent)
+(cd gem5/ext/dsent && g++ -O2 -std=c++14 -w -I. $(find . -name '*.cc' ! -name interface.cc) \
+    ../../../tools/dsent_main/dsent_main.cc -o ../../../dsent)
+(cd gem5 && python3 ../tools/dsent_main/characterize.py --dsent ../dsent --techs 22 \
+    --out ../results/dsent_characterization.json)
+
+# Netrace PARSEC traces (https://www.cs.utexas.edu/~netrace/), e.g. blackscholes
+curl -O https://www.cs.utexas.edu/~netrace/download/netrace-1.0.tar.bz2 && tar xjf netrace-1.0.tar.bz2
+curl -O https://www.cs.utexas.edu/~netrace/download/blackscholes_64c_simsmall.tra.bz2
+gcc -O2 -w -Inetrace-1.0 tools/netrace_dump/netrace_dump.c netrace-1.0/netrace.c netrace-1.0/queue.c -o netrace_dump
+mkdir -p traces && ./netrace_dump blackscholes_64c_simsmall.tra.bz2 2 250000 > traces/blackscholes_64c_simsmall.txt
+python experiments/08_applications.py --traces traces
+python experiments/09_per_benchmark.py
 ```
 
-Outputs go to `results/` (CSV/JSON) and `results/figures/` (PNG). All runs are seeded.
+All runs are seeded. `results/dsent_characterization.json` is included, so experiments 4, 7 and 8 run without building DSENT.
 
 Quick start from Python:
 
 ```python
-from nocsim import modified_torus, torus
-from nocsim.metrics import summary
+from nocsim import torus
+from nocsim.topology import folded_torus
+from nocsim.power import TechModel
 from nocsim.simulator import simulate, SimConfig
 
-print(summary(modified_torus(8)))                       # hops, wire, throughput estimate, ...
-r = simulate(torus(8), "transpose", rate=0.3, cfg=SimConfig())
+tm = TechModel.from_dsent(tile_mm=1.5)
+print(tm.max_frequency(torus(8)) / 1e9, tm.max_frequency(folded_torus(8)) / 1e9)  # 2.45 vs 4.0 GHz
+r = simulate(torus(8), "transpose", rate=0.3, cfg=SimConfig(vc_turnaround=2))
 print(r.avg_latency, r.accepted, r.saturated)
 ```
 
-## Repository layout
+## Limitations
 
-```
-nocsim/              the library (topology, metrics, routing, traffic, simulator, search)
-experiments/         one script per experiment (01-05) + shared helpers; booksim/ holds the BookSim driver
-tests/               pytest suite
-results/             generated tables, figures and searched designs
-paper/               LaTeX source and PDF of the write-up
-```
+* Netrace traces come from 2010-era in-order cores and are light; differences appear only with compressed compute gaps. Full-system simulation (gem5/Garnet) would be stronger.
+* Area, energy and timing come from DSENT models, not place-and-route; wire length is Manhattan distance on the floorplan.
+* Virtual cut-through rather than wormhole flow control; BookSim validation covers dimension-order routing only (BookSim cannot run the escape scheme).
+* One grid size (8×8), radix 4, boundary-port designs only. No NetSmith-generated baseline: NetSmith targets concentrated interposer networks and relies on a commercial MILP solver.
 
-## Limitations and future work
+## History
 
-* **Synthetic traffic only.** Application traces (e.g. PARSEC through gem5/Garnet) would show whether tornado-like or bit-complement-like patterns dominate in practice, and that decides whether the modified torus is worth using.
-* **No physical layout.** A *folded* torus equalises link lengths and changes the wire comparison. Area and power models (e.g. DSENT/Orion) would turn "wire tiles" into joules and mm².
-* **Search with structure.** Replace the tabular REINFORCE policy with a GNN policy, and put the simulator (or a learned surrogate of it) in the loop instead of the analytical estimate.
-* **Learned routing.** Topology and routing were optimised separately. Q-routing-style adaptive routing (Boyan & Littman, 1994) could be co-designed with the topology.
+The edge-folded "modified torus" started as a B.Tech. thesis at Assam University (S. Sharma, R. Ray, B. R. S. Satyanarayana; supervisor Dr. A. Biswas; 2023), evaluated then by hop counts on a 5×5 grid. A first re-evaluation (generalisation to n×n, a cycle-level simulator, deadlock analysis, topology search) is the [v1 preprint](paper/v1_preprint/main.pdf). The current manuscript broadens it into a design-space study with application traces, DSENT models, a fair folded-torus baseline and BookSim validation. The original thesis files are not included in this repository.
 
 ## Citation
-
-If you use this code or its results, please cite the preprint:
 
 ```bibtex
 @misc{ray2026lesswire,
@@ -220,12 +174,8 @@ If you use this code or its results, please cite the preprint:
 }
 ```
 
-## References
+The current manuscript, *"Where Should the Long Wires Go? Total-Wire, Longest-Wire and Performance Trade-offs in Radix-4 On-Chip Networks,"* is not yet published; cite the preprint above or this repository.
 
-* W. J. Dally, B. Towles. *Principles and Practices of Interconnection Networks.* Morgan Kaufmann, 2004.
-* W. J. Dally, C. L. Seitz. "Deadlock-free message routing in multiprocessor interconnection networks." *IEEE Trans. Computers*, 1987.
-* J. Duato. "A new theory of deadlock-free adaptive routing in wormhole networks." *IEEE TPDS*, 1993.
-* M. D. Schroeder et al. "Autonet: a high-speed, self-configuring local area network using point-to-point links." *IEEE JSAC*, 1991.
-* R. J. Williams. "Simple statistical gradient-following algorithms for connectionist reinforcement learning." *Machine Learning*, 1992.
-* J. A. Boyan, M. L. Littman. "Packet routing in dynamically changing networks: a reinforcement learning approach." *NeurIPS*, 1994.
-* S. Kumar et al. "A network on chip architecture and design methodology." *ISVLSI*, 2002.
+## License
+
+MIT (see [LICENSE](LICENSE)).

@@ -1,56 +1,60 @@
-"""Experiment 4: cycle-level latency vs. offered load (8x8).
+"""Experiment 4: cycle-level latency vs. offered load (8x8, synthetic traffic).
 
-Compares mesh, torus, the modified torus and one design from the search
-frontier of experiment 3 (the best found with <= 208 tiles of wire: 18% more
-than the modified torus, 7% less than the torus) under four traffic patterns, using deadlock-free
-adaptive routing (minimal adaptive + up*/down* escape, 3 VCs, 4-packet
-buffers). Two wire models:
+Compares the six designs of the resubmission (mesh, torus, folded torus,
+modified torus, and the two searched designs) under four synthetic patterns,
+with deadlock-free adaptive routing (minimal adaptive + up*/down* escape,
+3 VCs, 4-flit buffers) and the BookSim-matched router (2-cycle VC
+turnaround, experiment 5). Link timing comes from DSENT (22 nm, 1.5 mm
+tiles) at two clocks:
 
-* ``unit``: every link takes 1 cycle (the usual textbook assumption);
-* ``wire``: a link of length L takes ceil(L / 2) cycles, so long wraparound
-  links cost latency. This is the regime where shortening wires, which is
-  the point of the modified torus, should pay off.
+* ``2GHz``: every link up to 8.7 tiles fits in one cycle, so all links of
+  the hand-designed networks take 1 cycle;
+* ``4GHz``: one cycle reaches 4.3 tiles, so the 7-tile wraparounds of the
+  torus and modified torus take 2 cycles.
+
+Latency is reported in cycles of each clock.
 
 Outputs: results/simulation.csv, results/simulation_summary.json,
-         results/figures/latency_vs_load.png, results/figures/searched_topology.png
+         results/figures/latency_vs_load.png, results/figures/paper_topologies.png
 """
 
 import csv
 import math
 
 import matplotlib.pyplot as plt
-from common import (DESIGNS, FIGURES, RESULTS, baselines, draw_topology, load_design, rate_grid, save_json,
+from common import (FIGURES, RESULTS, draw_topology, paper_designs, rate_grid, save_json,
                     saturation_throughput, style, sweep)
 
 from nocsim import metrics, traffic
+from nocsim.power import TechModel
 from nocsim.simulator import SimConfig
-from nocsim.topology import Topology
+from nocsim.topology import Topology, folded_torus
 
 N = 8
 # Hotspot traffic is left out on purpose: the hot router can eject only one
 # packet per cycle, which caps every topology at the same ~0.08 load, so it
 # says nothing about topology.
 PATTERNS = ["uniform", "transpose", "bit_complement", "tornado"]
-WIRE_MODELS = ["unit", "wire"]
-SEARCHED_BUDGET = 208
+WIRE_MODELS = ["2GHz", "4GHz"]
+TECH = TechModel.from_dsent(tile_mm=1.5)
 
 
 def main():
-    topos = baselines(N)
-    searched_path = DESIGNS / f"frontier_8x8_w{SEARCHED_BUDGET}.json"
-    if searched_path.exists():
-        d = load_design(searched_path)
-        searched = Topology(f"Searched (wire {d.total_wire_length})", d.n, d.edges, d.info)
-        topos.append(searched)
-        fig, axes = plt.subplots(1, 3, figsize=(13, 4.6))
-        for ax, t in zip(axes, (topos[2], searched, topos[1])):
-            draw_topology(t, ax)
-        fig.tight_layout()
-        fig.savefig(FIGURES / "searched_topology.png", dpi=150, bbox_inches="tight")
+    topos = paper_designs(N)
+    fig, axes = plt.subplots(1, len(topos), figsize=(4 * len(topos), 4.6))
+    for ax, t in zip(axes, topos):
+        if t.name == "Folded torus":  # draw its physical (folded) wiring; the simulated network is the torus graph
+            phys = folded_torus(N, "physical")
+            t = Topology("Folded torus", N, phys.edges)
+        draw_topology(t, ax)
+    fig.tight_layout()
+    fig.savefig(FIGURES / "paper_topologies.png", dpi=150, bbox_inches="tight")
 
     jobs, keys = [], []
     for wm in WIRE_MODELS:
-        cfg = SimConfig(routing="adaptive", link_latency=wm, seed=7)
+        # 2-cycle VC turnaround: the router model that matches BookSim (experiment 5).
+        cfg = SimConfig(routing="adaptive", link_latency="wire", wire_reach=TECH.reach_tiles(float(wm[0]) * 1e9),
+                        vc_turnaround=2, seed=7)
         for pat in PATTERNS:
             for t in topos:
                 jobs.append((t, pat, cfg, rate_grid(0.025, 1.0)))
@@ -91,7 +95,7 @@ def main():
                             color=st["color"], marker=st["marker"], ms=3, lw=1.3)
             zero = min(r["zero_load_latency"] for r in summary if r["wire_model"] == wm and r["pattern"] == pat)
             ax.set_ylim(0, 6 * zero)
-            ax.set_title(f"{pat}  |  {'1-cycle links' if wm == 'unit' else 'wire-length delays'}", fontsize=9)
+            ax.set_title(f"{pat}  |  {wm}", fontsize=9)
             ax.set_xlabel("offered load (packets/node/cycle)", fontsize=8)
             if j == 0:
                 ax.set_ylabel("avg latency (cycles)")

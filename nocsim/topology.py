@@ -43,6 +43,10 @@ class Topology:
         name:  Human-readable label used in plots and tables.
         n:     Side length of the grid; the network has n * n routers.
         edges: Sorted tuple of undirected links (u, v) with u < v.
+        lengths: Optional ((u, v), length) overrides of the physical wire
+               length of particular links, for layouts where a router's
+               logical position (its node id, which traffic patterns refer
+               to) differs from where its wires run, e.g. a folded torus.
     """
 
     name: str
@@ -50,6 +54,7 @@ class Topology:
     edges: tuple[Edge, ...]
     # Free-form metadata, e.g. how a searched topology was found.
     info: dict = field(default_factory=dict, compare=False, hash=False)
+    lengths: tuple = field(default=(), compare=False, hash=False)
 
     # ----- geometry --------------------------------------------------------
 
@@ -64,8 +69,20 @@ class Topology:
     def node(self, row: int, col: int) -> int:
         return row * self.n + col
 
+    @cached_property
+    def _length_overrides(self) -> dict:
+        return {_norm(*e): L for e, L in self.lengths}
+
     def link_length(self, u: int, v: int) -> int:
-        """Physical wire length of link u-v in tile pitches."""
+        """Physical wire length of link u-v in tile pitches.
+
+        Manhattan distance between the two tiles, unless ``lengths``
+        overrides it for this link.
+        """
+        if self.lengths:
+            L = self._length_overrides.get(_norm(u, v))
+            if L is not None:
+                return L
         (r1, c1), (r2, c2) = self.coord(u), self.coord(v)
         return abs(r1 - r2) + abs(c1 - c2)
 
@@ -114,11 +131,15 @@ class Topology:
         return g
 
     def to_dict(self) -> dict:
-        return {"name": self.name, "n": self.n, "edges": [list(e) for e in self.edges], "info": self.info}
+        d = {"name": self.name, "n": self.n, "edges": [list(e) for e in self.edges], "info": self.info}
+        if self.lengths:
+            d["lengths"] = [[list(e), L] for e, L in self.lengths]
+        return d
 
     @staticmethod
     def from_dict(d: dict) -> "Topology":
-        return Topology(d["name"], d["n"], tuple(sorted(_norm(*e) for e in d["edges"])), d.get("info", {}))
+        lengths = tuple((_norm(*e), L) for e, L in d.get("lengths", []))
+        return Topology(d["name"], d["n"], tuple(sorted(_norm(*e) for e in d["edges"])), d.get("info", {}), lengths)
 
 
 # ---------------------------------------------------------------------------
@@ -220,6 +241,60 @@ def modified_torus(n: int) -> Topology:
     return _build("Modified torus", n, extra)
 
 
+def folded_positions(n: int) -> list[int]:
+    """Physical position of each ring index in a folded ring of n routers.
+
+    Ring order 0, 1, ..., n-1 is laid out as 0, 2, 4, ... going out and the odd
+    positions coming back, so consecutive ring members (including the n-1 -> 0
+    wraparound) are never more than 2 tiles apart.
+    """
+    return [2 * i if i < (n + 1) // 2 else 2 * (n - 1 - i) + 1 for i in range(n)]
+
+
+def folded_torus(n: int, mapping: str = "logical") -> Topology:
+    """2D torus laid out as a *folded* torus (Dally & Towles, sec. 5.3).
+
+    Each row and column ring is folded, so every link is at most 2 tiles long
+    instead of having one (n-1)-tile wraparound per ring. Total wire is the
+    same as the flat torus. This is how tori are built on chips in practice,
+    and it is a standard baseline in recent topology work (NetSmith, Kite).
+
+    ``mapping`` decides which core sits at which router:
+
+    * ``"logical"`` (default): the network *is* ``torus(n)``, with the same
+      node ids and therefore the same traffic, and only the physical link
+      lengths change. This isolates the effect of folding (shorter wires)
+      from any change in which cores talk to each other, and is the fair
+      comparison with the flat torus.
+    * ``"physical"``: routers keep their tile positions and the wiring is
+      folded, so physically defined patterns (transpose, ...) map onto
+      different logical flows than on the flat torus. Reported only as a
+      sensitivity check.
+    """
+    if n < 3:
+        raise ValueError("a torus needs n >= 3")
+    pos = folded_positions(n)
+    if mapping == "physical":
+        edges = set()
+        for line in range(n):
+            for i in range(n):
+                a, b = pos[i], pos[(i + 1) % n]
+                edges.add(_norm(line * n + a, line * n + b))  # row ring
+                edges.add(_norm(a * n + line, b * n + line))  # column ring
+        return Topology("Folded torus (physical mapping)", n, tuple(sorted(edges)))
+    if mapping != "logical":
+        raise ValueError(mapping)
+    base = torus(n)
+    lengths = []
+    for u, v in base.edges:
+        (r1, c1), (r2, c2) = divmod(u, n), divmod(v, n)
+        if r1 == r2:  # row link between ring positions c1 and c2
+            lengths.append(((u, v), abs(pos[c1] - pos[c2])))
+        else:  # column link between ring positions r1 and r2
+            lengths.append(((u, v), abs(pos[r1] - pos[r2])))
+    return Topology("Folded torus", n, base.edges, {}, tuple(lengths))
+
+
 # ---------------------------------------------------------------------------
 # The boundary-port design space shared by torus, modified torus and search
 # ---------------------------------------------------------------------------
@@ -247,6 +322,7 @@ def from_boundary_links(n: int, links: list[Edge], name: str = "Searched", info:
 
 
 def baseline(name: str, n: int) -> Topology:
-    """Look up one of the three reference topologies by name."""
-    builders = {"mesh": mesh, "torus": torus, "modified": modified_torus, "modified_torus": modified_torus}
+    """Look up a reference topology by name."""
+    builders = {"mesh": mesh, "torus": torus, "modified": modified_torus, "modified_torus": modified_torus,
+                "folded": folded_torus, "folded_torus": folded_torus}
     return builders[name.lower()](n)

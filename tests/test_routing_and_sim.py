@@ -97,3 +97,13 @@ def test_dor_rejects_unsupported_setups():
         simulate(modified_torus(6), "uniform", 0.1, SimConfig(routing="dor"))
     with pytest.raises(ValueError):
         simulate(torus(6), "uniform", 0.1, SimConfig(routing="dor", num_vcs=3))
+
+
+def test_max_link_constraint_is_respected_by_sampling_and_search():
+    from nocsim.search import DesignSpace, Objective, simulated_annealing
+    for limit in (2, 4):
+        space = DesignSpace(6, limit)
+        m = space.random_matching(random.Random(3))
+        assert len(m) == 12 and max(space.length(*e) for e in m) <= limit
+        res = simulated_annealing(Objective(6, 10**6, max_link=limit), 80, seed=0)
+        assert max(space.length(*e) for e in res.best_links) <= limit

@@ -1,0 +1,102 @@
+{
+  "benchmarks": [
+    "blackscholes",
+    "canneal",
+    "ferret",
+    "fluidanimate",
+    "swaptions",
+    "vips",
+    "x264"
+  ],
+  "tile_mm": 1.0,
+  "normalised_to_mesh_geomean": {
+    "pipelined_x10": {
+      "Mesh": {
+        "runtime_us": 1.0,
+        "avg_latency_ns": 1.0,
+        "energy_uJ": 1.0,
+        "dynamic_uJ": 1.0,
+        "edp": 1.0
+      },
+      "Torus": {
+        "runtime_us": 0.8778355458729633,
+        "avg_latency_ns": 0.8532898978685803,
+        "energy_uJ": 0.995753941027914,
+        "dynamic_uJ": 1.0234448106154646,
+        "edp": 0.8741082043773934
+      },
+      "Folded torus": {
+        "runtime_us": 0.8778355458729633,
+        "avg_latency_ns": 0.8532898978685803,
+        "energy_uJ": 0.9836584242642259,
+        "dynamic_uJ": 1.0143461153642908,
+        "edp": 0.8634903298165256
+      },
+      "Modified torus": {
+        "runtime_us": 0.8718954960507438,
+        "avg_latency_ns": 0.8514981544095933,
+        "energy_uJ": 0.9783230867040962,
+        "dynamic_uJ": 0.9908096465782421,
+        "edp": 0.8529954929797627
+      },
+      "Searched (links <= 5)": {
+        "runtime_us": 0.8256355544697261,
+        "avg_latency_ns": 0.7987817861087815,
+        "energy_uJ": 0.9252597505647371,
+        "dynamic_uJ": 0.9591257536560203,
+        "edp": 0.7639273471860372
+      },
+      "Searched (wire <= 208)": {
+        "runtime_us": 0.8245117767774273,
+        "avg_latency_ns": 0.7951544334617944,
+        "energy_uJ": 0.9336177405016872,
+        "dynamic_uJ": 1.0115706193025336,
+        "edp": 0.7697788220519731
+      }
+    },
+    "global_x10": {
+      "Mesh": {
+        "runtime_us": 1.0,
+        "avg_latency_ns": 1.0,
+        "energy_uJ": 1.0,
+        "dynamic_uJ": 1.0,
+        "edp": 1.0
+      },
+      "Torus": {
+        "runtime_us": 0.938421690798488,
+        "avg_latency_ns": 0.925421381613983,
+        "energy_uJ": 1.059710753382351,
+        "dynamic_uJ": 1.0229075514552184,
+        "edp": 0.9944555569464055
+      },
+      "Folded torus": {
+        "runtime_us": 0.9087346758088922,
+        "avg_latency_ns": 0.8521363724290746,
+        "energy_uJ": 1.0175044952527839,
+        "dynamic_uJ": 1.013934421789968,
+        "edp": 0.9246416176276291
+      },
+      "Modified torus": {
+        "runtime_us": 0.93361523191521,
+        "avg_latency_ns": 0.9231484746228849,
+        "energy_uJ": 1.0429854586364906,
+        "dynamic_uJ": 0.9900756030463601,
+        "edp": 0.9737471108490988
+      },
+      "Searched (links <= 5)": {
+        "runtime_us": 0.8698929956246123,
+        "avg_latency_ns": 0.7945414573141518,
+        "energy_uJ": 0.9738734008273823,
+        "dynamic_uJ": 0.9582025421776776,
+        "edp": 0.8471656500048603
+      },
+      "Searched (wire <= 208)": {
+        "runtime_us": 0.9890846876582974,
+        "avg_latency_ns": 1.1260910512442073,
+        "energy_uJ": 1.1040627992081304,
+        "dynamic_uJ": 1.0111660996164102,
+        "edp": 1.0920116089099192
+      }
+    }
+  }
+}

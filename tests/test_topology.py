@@ -50,3 +50,15 @@ def test_boundary_ports_count():
 def test_modified_torus_rejects_small_grids():
     with pytest.raises(ValueError):
         modified_torus(4)
+
+
+# ---- folded torus ------------------------------------------------------------
+
+@pytest.mark.parametrize("n", [5, 6, 8, 9])
+def test_folded_torus_is_a_torus_with_short_links(n):
+    import networkx as nx
+    from nocsim.topology import folded_torus
+    f, t = folded_torus(n), torus(n)
+    assert nx.is_isomorphic(f.to_networkx(), t.to_networkx())  # same logical network
+    assert f.max_link_length == 2 and set(f.degrees) == {4}
+    assert f.total_wire_length == t.total_wire_length  # folding moves wire, it doesn't add any

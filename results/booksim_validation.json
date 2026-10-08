@@ -2,6 +2,8 @@
   {
     "topology": "mesh",
     "vcs": 2,
+    "packet_size": 1,
+    "buffer": 4,
     "pattern": "uniform",
     "zero_load_booksim": 26.890133333333335,
     "zero_load_nocsim": 27.040076288753422,
@@ -12,6 +14,8 @@
   {
     "topology": "mesh",
     "vcs": 2,
+    "packet_size": 1,
+    "buffer": 4,
     "pattern": "transpose",
     "zero_load_booksim": 27.219399999999997,
     "zero_load_nocsim": 26.95081179210737,
@@ -22,6 +26,8 @@
   {
     "topology": "mesh",
     "vcs": 2,
+    "packet_size": 1,
+    "buffer": 4,
     "pattern": "bit_complement",
     "zero_load_booksim": 37.854533333333336,
     "zero_load_nocsim": 38.047238080260435,
@@ -32,36 +38,50 @@
   {
     "topology": "torus",
     "vcs": 2,
+    "packet_size": 1,
+    "buffer": 4,
     "pattern": "uniform",
     "zero_load_booksim": 22.064566666666668,
     "zero_load_nocsim": 22.186146313428917,
     "saturation_booksim": 0.3,
     "saturation_nocsim": 0.42,
-    "mean_abs_latency_error_pct": 8.400476640752988
+    "mean_abs_latency_error_pct": 8.400476640752988,
+    "saturation_nocsim_turnaround2": 0.32,
+    "saturation_nocsim_turnaround3": 0.22
   },
   {
     "topology": "torus",
     "vcs": 2,
+    "packet_size": 1,
+    "buffer": 4,
     "pattern": "transpose",
     "zero_load_booksim": 22.1339,
     "zero_load_nocsim": 21.77511601466864,
     "saturation_booksim": 0.12,
     "saturation_nocsim": 0.2,
-    "mean_abs_latency_error_pct": 4.715626670062172
+    "mean_abs_latency_error_pct": 4.715626670062172,
+    "saturation_nocsim_turnaround2": 0.12,
+    "saturation_nocsim_turnaround3": 0.08
   },
   {
     "topology": "torus",
     "vcs": 2,
+    "packet_size": 1,
+    "buffer": 4,
     "pattern": "bit_complement",
     "zero_load_booksim": 21.989,
     "zero_load_nocsim": 22.02618852529697,
     "saturation_booksim": 0.2,
     "saturation_nocsim": 0.32,
-    "mean_abs_latency_error_pct": 7.700353227109847
+    "mean_abs_latency_error_pct": 7.700353227109847,
+    "saturation_nocsim_turnaround2": 0.2,
+    "saturation_nocsim_turnaround3": 0.14
   },
   {
     "topology": "torus",
     "vcs": 4,
+    "packet_size": 1,
+    "buffer": 4,
     "pattern": "uniform",
     "zero_load_booksim": 22.010166666666667,
     "zero_load_nocsim": 22.186146313428917,
@@ -72,6 +92,8 @@
   {
     "topology": "torus",
     "vcs": 4,
+    "packet_size": 1,
+    "buffer": 4,
     "pattern": "transpose",
     "zero_load_booksim": 22.116366666666664,
     "zero_load_nocsim": 21.773025258981445,
@@ -82,11 +104,85 @@
   {
     "topology": "torus",
     "vcs": 4,
+    "packet_size": 1,
+    "buffer": 4,
     "pattern": "bit_complement",
     "zero_load_booksim": 21.967533333333332,
     "zero_load_nocsim": 22.02618852529697,
     "saturation_booksim": 0.4,
     "saturation_nocsim": 0.42,
     "mean_abs_latency_error_pct": 1.2184653545898363
+  },
+  {
+    "topology": "mesh",
+    "vcs": 2,
+    "packet_size": 5,
+    "buffer": 8,
+    "pattern": "uniform",
+    "zero_load_booksim": 30.96253333333333,
+    "zero_load_nocsim": 31.596888446820444,
+    "saturation_booksim": 0.07,
+    "saturation_nocsim": 0.06,
+    "mean_abs_latency_error_pct": 4.426796124732931
+  },
+  {
+    "topology": "mesh",
+    "vcs": 2,
+    "packet_size": 5,
+    "buffer": 8,
+    "pattern": "transpose",
+    "zero_load_booksim": 31.0301,
+    "zero_load_nocsim": 31.35943319980322,
+    "saturation_booksim": 0.025,
+    "saturation_nocsim": 0.025,
+    "mean_abs_latency_error_pct": 2.5256610323297375
+  },
+  {
+    "topology": "mesh",
+    "vcs": 2,
+    "packet_size": 5,
+    "buffer": 8,
+    "pattern": "bit_complement",
+    "zero_load_booksim": 41.752833333333335,
+    "zero_load_nocsim": 42.45014264381919,
+    "saturation_booksim": 0.04,
+    "saturation_nocsim": 0.035,
+    "mean_abs_latency_error_pct": 1.8974559930538961
+  },
+  {
+    "topology": "torus",
+    "vcs": 4,
+    "packet_size": 5,
+    "buffer": 8,
+    "pattern": "uniform",
+    "zero_load_booksim": 26.1317,
+    "zero_load_nocsim": 26.130112482398307,
+    "saturation_booksim": 0.11,
+    "saturation_nocsim": 0.095,
+    "mean_abs_latency_error_pct": 5.325966632793857
+  },
+  {
+    "topology": "torus",
+    "vcs": 4,
+    "packet_size": 5,
+    "buffer": 8,
+    "pattern": "transpose",
+    "zero_load_booksim": 26.343266666666665,
+    "zero_load_nocsim": 26.28680715464351,
+    "saturation_booksim": 0.05,
+    "saturation_nocsim": 0.045,
+    "mean_abs_latency_error_pct": 1.2679511492359716
+  },
+  {
+    "topology": "torus",
+    "vcs": 4,
+    "packet_size": 5,
+    "buffer": 8,
+    "pattern": "bit_complement",
+    "zero_load_booksim": 25.895899999999997,
+    "zero_load_nocsim": 26.02943084038233,
+    "saturation_booksim": 0.08,
+    "saturation_nocsim": 0.075,
+    "mean_abs_latency_error_pct": 2.4138503097882253
   }
 ]

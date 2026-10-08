@@ -28,15 +28,31 @@ WORKERS = max(1, min(24, (os.cpu_count() or 2) - 1))
 COLORS = {
     "Mesh": "#7f7f7f",
     "Torus": "#1f77b4",
+    "Folded torus": "#9467bd",
     "Modified torus": "#d62728",
-    "Searched": "#2ca02c",
+    "Searched": "#2ca02c",  # any searched design not listed below
+    "Searched (links": "#2ca02c",
+    "Searched (wire": "#bcbd22",
 }
-MARKERS = {"Mesh": "s", "Torus": "o", "Modified torus": "^", "Searched": "D"}
+MARKERS = {"Mesh": "s", "Torus": "o", "Folded torus": "P", "Modified torus": "^",
+           "Searched": "D", "Searched (links": "D", "Searched (wire": "X"}
 
 
 def style(name: str) -> dict:
-    key = "Searched" if name.startswith("Searched") else name
+    key = name
+    if name.startswith("Searched"):
+        key = next((k for k in ("Searched (links", "Searched (wire") if name.startswith(k)), "Searched")
     return {"color": COLORS.get(key, "black"), "marker": MARKERS.get(key, "x")}
+
+
+def paper_designs(n: int = 8) -> list[Topology]:
+    """The six designs compared in the resubmission (experiments 4, 7, 8)."""
+    from nocsim.topology import folded_torus
+    out = [mesh(n), torus(n), folded_torus(n), modified_torus(n)]
+    for f, name in (("maxlink_8x8_L5.json", "Searched (links <= 5)"), ("frontier_8x8_w208.json", "Searched (wire <= 208)")):
+        d = load_design(DESIGNS / f)
+        out.append(Topology(name, d.n, d.edges, d.info))
+    return out
 
 
 def baselines(n: int) -> list[Topology]:

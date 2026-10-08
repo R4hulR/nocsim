@@ -1,290 +1,434 @@
 [
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
     "pattern": "uniform",
     "topology": "Mesh",
-    "zero_load_latency": 10.565603763721903,
-    "saturation": 0.40058333333333335,
+    "zero_load_latency": 10.584311632870865,
+    "saturation": 0.37461979166666665,
     "estimate": 0.3682005680972246,
-    "zero_load_wire": 5.273392577104025
+    "zero_load_wire": 5.28068303094984
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
     "pattern": "uniform",
     "topology": "Torus",
-    "zero_load_latency": 8.110587002096436,
-    "saturation": 0.72396875,
+    "zero_load_latency": 8.062664560294891,
+    "saturation": 0.44872395833333334,
     "estimate": 0.9843749999999999,
-    "zero_load_wire": 7.082285115303983
+    "zero_load_wire": 6.963665086887835
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
+    "pattern": "uniform",
+    "topology": "Folded torus",
+    "zero_load_latency": 8.062664560294891,
+    "saturation": 0.44872395833333334,
+    "estimate": 0.9843749999999999,
+    "zero_load_wire": 7.041074249605055
+  },
+  {
+    "wire_model": "2GHz",
     "pattern": "uniform",
     "topology": "Modified torus",
-    "zero_load_latency": 8.288611544461778,
-    "saturation": 0.3983125,
+    "zero_load_latency": 8.228661749209694,
+    "saturation": 0.34851041666666666,
     "estimate": 0.4259421780270636,
-    "zero_load_wire": 6.85179407176287
+    "zero_load_wire": 6.7523709167544785
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
     "pattern": "uniform",
-    "topology": "Searched (wire 208)",
-    "zero_load_latency": 7.513354700854701,
-    "saturation": 0.45080729166666667,
+    "topology": "Searched (links <= 5)",
+    "zero_load_latency": 7.65254691689008,
+    "saturation": 0.37627083333333333,
+    "estimate": 0.4850254924202132,
+    "zero_load_wire": 6.675067024128686
+  },
+  {
+    "wire_model": "2GHz",
+    "pattern": "uniform",
+    "topology": "Searched (wire <= 208)",
+    "zero_load_latency": 7.720168954593453,
+    "saturation": 0.3989270833333333,
     "estimate": 0.5091061712029451,
-    "zero_load_wire": 7.346153846153846
+    "zero_load_wire": 7.178986272439282
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
     "pattern": "transpose",
     "topology": "Mesh",
-    "zero_load_latency": 11.770708283313326,
-    "saturation": 0.3285,
+    "zero_load_latency": 12.037394451145959,
+    "saturation": 0.3056875,
     "estimate": 0.32691051600261267,
-    "zero_load_wire": 5.883553421368547
+    "zero_load_wire": 6.010856453558504
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
     "pattern": "transpose",
     "topology": "Torus",
-    "zero_load_latency": 9.173065204143814,
-    "saturation": 0.524109375,
+    "zero_load_latency": 9.06,
+    "saturation": 0.39445833333333336,
     "estimate": 0.6140350877192983,
-    "zero_load_wire": 8.23034734917733
+    "zero_load_wire": 7.9406060606060604
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
+    "pattern": "transpose",
+    "topology": "Folded torus",
+    "zero_load_latency": 9.06,
+    "saturation": 0.39445833333333336,
+    "estimate": 0.6140350877192983,
+    "zero_load_wire": 7.917575757575758
+  },
+  {
+    "wire_model": "2GHz",
     "pattern": "transpose",
     "topology": "Modified torus",
-    "zero_load_latency": 8.523809523809524,
-    "saturation": 0.3046510416666667,
+    "zero_load_latency": 8.614689945815774,
+    "saturation": 0.2841927083333333,
     "estimate": 0.40103570783404585,
-    "zero_load_wire": 7.507936507936508
+    "zero_load_wire": 7.714629741119808
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
     "pattern": "transpose",
-    "topology": "Searched (wire 208)",
-    "zero_load_latency": 6.645299145299146,
-    "saturation": 0.2845729166666667,
+    "topology": "Searched (links <= 5)",
+    "zero_load_latency": 6.848101265822785,
+    "saturation": 0.19680729166666666,
+    "estimate": 0.25,
+    "zero_load_wire": 6.795660036166366
+  },
+  {
+    "wire_model": "2GHz",
+    "pattern": "transpose",
+    "topology": "Searched (wire <= 208)",
+    "zero_load_latency": 6.836848635235732,
+    "saturation": 0.28383854166666667,
     "estimate": 0.4083769633507853,
-    "zero_load_wire": 8.10989010989011
+    "zero_load_wire": 8.122828784119108
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
     "pattern": "bit_complement",
     "topology": "Mesh",
-    "zero_load_latency": 16.01248699271592,
-    "saturation": 0.1741875,
+    "zero_load_latency": 15.963389121338912,
+    "saturation": 0.14952604166666666,
     "estimate": 0.10501205557980724,
-    "zero_load_wire": 7.9937565036420395
+    "zero_load_wire": 7.9612970711297075
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
     "pattern": "bit_complement",
     "topology": "Torus",
-    "zero_load_latency": 7.9947396107311945,
-    "saturation": 0.32424479166666664,
+    "zero_load_latency": 8.105151354221986,
+    "saturation": 0.325859375,
     "estimate": 0.3225806451612903,
-    "zero_load_wire": 10.176749079431877
+    "zero_load_wire": 10.024429102496017
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
+    "pattern": "bit_complement",
+    "topology": "Folded torus",
+    "zero_load_latency": 8.105151354221986,
+    "saturation": 0.325859375,
+    "estimate": 0.3225806451612903,
+    "zero_load_wire": 6.093467870419543
+  },
+  {
+    "wire_model": "2GHz",
     "pattern": "bit_complement",
     "topology": "Modified torus",
-    "zero_load_latency": 10.325133689839571,
-    "saturation": 0.09925520833333333,
+    "zero_load_latency": 10.550211416490486,
+    "saturation": 0.099296875,
     "estimate": 0.13809990205680706,
-    "zero_load_wire": 11.075935828877006
+    "zero_load_wire": 11.418604651162791
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
     "pattern": "bit_complement",
-    "topology": "Searched (wire 208)",
-    "zero_load_latency": 9.335117773019272,
-    "saturation": 0.2004375,
-    "estimate": 0.21406727828746175,
-    "zero_load_wire": 12.16595289079229
+    "topology": "Searched (links <= 5)",
+    "zero_load_latency": 10.7248,
+    "saturation": 0.22540625,
+    "estimate": 0.22556390977443608,
+    "zero_load_wire": 10.845866666666666
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
+    "pattern": "bit_complement",
+    "topology": "Searched (wire <= 208)",
+    "zero_load_latency": 9.548884165781084,
+    "saturation": 0.20017708333333334,
+    "estimate": 0.21406727828746175,
+    "zero_load_wire": 12.022316684378321
+  },
+  {
+    "wire_model": "2GHz",
     "pattern": "tornado",
     "topology": "Mesh",
-    "zero_load_latency": 7.501336183858899,
-    "saturation": 0.27594270833333334,
+    "zero_load_latency": 7.458533975387908,
+    "saturation": 0.25190104166666666,
     "estimate": 0.3333333333333333,
-    "zero_load_wire": 3.745056119722074
+    "zero_load_wire": 3.720171214553237
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
     "pattern": "tornado",
     "topology": "Torus",
-    "zero_load_latency": 6.039720880300591,
-    "saturation": 0.2502447916666667,
+    "zero_load_latency": 6.040064102564102,
+    "saturation": 0.25069270833333335,
     "estimate": 0.3333333333333333,
-    "zero_load_wire": 5.422973698336017
+    "zero_load_wire": 5.244658119658119
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
+    "pattern": "tornado",
+    "topology": "Folded torus",
+    "zero_load_latency": 6.040064102564102,
+    "saturation": 0.25069270833333335,
+    "estimate": 0.3333333333333333,
+    "zero_load_wire": 5.264957264957265
+  },
+  {
+    "wire_model": "2GHz",
     "pattern": "tornado",
     "topology": "Modified torus",
-    "zero_load_latency": 6.708732694355698,
-    "saturation": 0.373609375,
+    "zero_load_latency": 6.72605671482076,
+    "saturation": 0.2998645833333333,
     "estimate": 0.3333333333333333,
-    "zero_load_wire": 4.578274760383387
+    "zero_load_wire": 4.58159443552702
   },
   {
-    "wire_model": "unit",
+    "wire_model": "2GHz",
     "pattern": "tornado",
-    "topology": "Searched (wire 208)",
-    "zero_load_latency": 6.788410419989368,
-    "saturation": 0.27694270833333334,
+    "topology": "Searched (links <= 5)",
+    "zero_load_latency": 6.476038338658147,
+    "saturation": 0.27655729166666665,
     "estimate": 0.3333333333333333,
-    "zero_load_wire": 5.270069112174375
+    "zero_load_wire": 4.273695420660277
   },
   {
-    "wire_model": "wire",
+    "wire_model": "2GHz",
+    "pattern": "tornado",
+    "topology": "Searched (wire <= 208)",
+    "zero_load_latency": 6.8183271177410765,
+    "saturation": 0.2749479166666667,
+    "estimate": 0.3333333333333333,
+    "zero_load_wire": 5.229088971763452
+  },
+  {
+    "wire_model": "4GHz",
     "pattern": "uniform",
     "topology": "Mesh",
-    "zero_load_latency": 10.565603763721903,
-    "saturation": 0.40058333333333335,
+    "zero_load_latency": 10.584311632870865,
+    "saturation": 0.37461979166666665,
     "estimate": 0.3682005680972246,
-    "zero_load_wire": 5.273392577104025
+    "zero_load_wire": 5.28068303094984
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
     "pattern": "uniform",
     "topology": "Torus",
-    "zero_load_latency": 9.6053050397878,
-    "saturation": 0.7239427083333333,
+    "zero_load_latency": 8.580987785448752,
+    "saturation": 0.44967708333333334,
     "estimate": 0.9843749999999999,
-    "zero_load_wire": 7.023342175066313
+    "zero_load_wire": 6.9532660647902285
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
+    "pattern": "uniform",
+    "topology": "Folded torus",
+    "zero_load_latency": 8.062664560294891,
+    "saturation": 0.44872395833333334,
+    "estimate": 0.9843749999999999,
+    "zero_load_wire": 7.041074249605055
+  },
+  {
+    "wire_model": "4GHz",
     "pattern": "uniform",
     "topology": "Modified torus",
-    "zero_load_latency": 9.392364793213149,
-    "saturation": 0.398375,
+    "zero_load_latency": 8.461096605744125,
+    "saturation": 0.3494322916666667,
     "estimate": 0.4259421780270636,
-    "zero_load_wire": 6.581124072110287
+    "zero_load_wire": 6.637597911227154
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
     "pattern": "uniform",
-    "topology": "Searched (wire 208)",
-    "zero_load_latency": 9.492046659597031,
-    "saturation": 0.44873958333333336,
+    "topology": "Searched (links <= 5)",
+    "zero_load_latency": 7.970133333333333,
+    "saturation": 0.37500520833333334,
+    "estimate": 0.4850254924202132,
+    "zero_load_wire": 6.737066666666666
+  },
+  {
+    "wire_model": "4GHz",
+    "pattern": "uniform",
+    "topology": "Searched (wire <= 208)",
+    "zero_load_latency": 8.221985058697973,
+    "saturation": 0.39725520833333333,
     "estimate": 0.5091061712029451,
-    "zero_load_wire": 7.6802757158006365
+    "zero_load_wire": 7.297758804695838
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
     "pattern": "transpose",
     "topology": "Mesh",
-    "zero_load_latency": 11.770708283313326,
-    "saturation": 0.3285,
+    "zero_load_latency": 12.037394451145959,
+    "saturation": 0.3056875,
     "estimate": 0.32691051600261267,
-    "zero_load_wire": 5.883553421368547
+    "zero_load_wire": 6.010856453558504
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
     "pattern": "transpose",
     "topology": "Torus",
-    "zero_load_latency": 10.647094068304375,
-    "saturation": 0.5238645833333333,
+    "zero_load_latency": 9.99450884685784,
+    "saturation": 0.394078125,
     "estimate": 0.6140350877192983,
-    "zero_load_wire": 7.805871779508688
+    "zero_load_wire": 8.131787675411836
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
+    "pattern": "transpose",
+    "topology": "Folded torus",
+    "zero_load_latency": 9.06,
+    "saturation": 0.39445833333333336,
+    "estimate": 0.6140350877192983,
+    "zero_load_wire": 7.917575757575758
+  },
+  {
+    "wire_model": "4GHz",
     "pattern": "transpose",
     "topology": "Modified torus",
-    "zero_load_latency": 10.224264705882353,
-    "saturation": 0.30595833333333333,
+    "zero_load_latency": 9.034751348112643,
+    "saturation": 0.285421875,
     "estimate": 0.40103570783404585,
-    "zero_load_wire": 7.572303921568627
+    "zero_load_wire": 7.478729778310366
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
     "pattern": "transpose",
-    "topology": "Searched (wire 208)",
-    "zero_load_latency": 8.730958230958231,
-    "saturation": 0.283921875,
+    "topology": "Searched (links <= 5)",
+    "zero_load_latency": 7.040803897685749,
+    "saturation": 0.19625,
+    "estimate": 0.25,
+    "zero_load_wire": 6.769792935444579
+  },
+  {
+    "wire_model": "4GHz",
+    "pattern": "transpose",
+    "topology": "Searched (wire <= 208)",
+    "zero_load_latency": 7.341641337386018,
+    "saturation": 0.2839010416666667,
     "estimate": 0.4083769633507853,
-    "zero_load_wire": 7.875921375921376
+    "zero_load_wire": 7.786018237082067
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
     "pattern": "bit_complement",
     "topology": "Mesh",
-    "zero_load_latency": 16.01248699271592,
-    "saturation": 0.1741875,
+    "zero_load_latency": 15.963389121338912,
+    "saturation": 0.14952604166666666,
     "estimate": 0.10501205557980724,
-    "zero_load_wire": 7.9937565036420395
+    "zero_load_wire": 7.9612970711297075
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
     "pattern": "bit_complement",
     "topology": "Torus",
-    "zero_load_latency": 11.055673382820785,
-    "saturation": 0.32584375,
+    "zero_load_latency": 8.964323748668797,
+    "saturation": 0.32541145833333335,
     "estimate": 0.3225806451612903,
-    "zero_load_wire": 10.042417815482503
+    "zero_load_wire": 9.969116080937168
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
+    "pattern": "bit_complement",
+    "topology": "Folded torus",
+    "zero_load_latency": 8.105151354221986,
+    "saturation": 0.325859375,
+    "estimate": 0.3225806451612903,
+    "zero_load_wire": 6.093467870419543
+  },
+  {
+    "wire_model": "4GHz",
     "pattern": "bit_complement",
     "topology": "Modified torus",
-    "zero_load_latency": 13.53064431639602,
-    "saturation": 0.10000520833333333,
+    "zero_load_latency": 11.423970432946145,
+    "saturation": 0.09956770833333334,
     "estimate": 0.13809990205680706,
-    "zero_load_wire": 11.434258774227343
+    "zero_load_wire": 11.262935586061246
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
     "pattern": "bit_complement",
-    "topology": "Searched (wire 208)",
-    "zero_load_latency": 12.922133333333333,
-    "saturation": 0.20043229166666668,
-    "estimate": 0.21406727828746175,
-    "zero_load_wire": 12.081066666666667
+    "topology": "Searched (links <= 5)",
+    "zero_load_latency": 10.995753715498939,
+    "saturation": 0.22508854166666667,
+    "estimate": 0.22556390977443608,
+    "zero_load_wire": 10.784501061571126
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
+    "pattern": "bit_complement",
+    "topology": "Searched (wire <= 208)",
+    "zero_load_latency": 10.796384901648059,
+    "saturation": 0.19989583333333333,
+    "estimate": 0.21406727828746175,
+    "zero_load_wire": 12.126528442317916
+  },
+  {
+    "wire_model": "4GHz",
     "pattern": "tornado",
     "topology": "Mesh",
-    "zero_load_latency": 7.501336183858899,
-    "saturation": 0.27594270833333334,
+    "zero_load_latency": 7.458533975387908,
+    "saturation": 0.25190104166666666,
     "estimate": 0.3333333333333333,
-    "zero_load_wire": 3.745056119722074
+    "zero_load_wire": 3.720171214553237
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
     "pattern": "tornado",
     "topology": "Torus",
-    "zero_load_latency": 7.154907161803713,
-    "saturation": 0.2506979166666667,
+    "zero_load_latency": 6.424920127795527,
+    "saturation": 0.25088020833333335,
     "estimate": 0.3333333333333333,
-    "zero_load_wire": 5.268435013262599
+    "zero_load_wire": 5.325878594249201
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
+    "pattern": "tornado",
+    "topology": "Folded torus",
+    "zero_load_latency": 6.040064102564102,
+    "saturation": 0.25069270833333335,
+    "estimate": 0.3333333333333333,
+    "zero_load_wire": 5.264957264957265
+  },
+  {
+    "wire_model": "4GHz",
     "pattern": "tornado",
     "topology": "Modified torus",
-    "zero_load_latency": 7.365138592750533,
-    "saturation": 0.3746875,
+    "zero_load_latency": 6.892432432432432,
+    "saturation": 0.30091666666666667,
     "estimate": 0.3333333333333333,
-    "zero_load_wire": 4.5106609808102345
+    "zero_load_wire": 4.538378378378378
   },
   {
-    "wire_model": "wire",
+    "wire_model": "4GHz",
     "pattern": "tornado",
-    "topology": "Searched (wire 208)",
-    "zero_load_latency": 7.7312633832976445,
-    "saturation": 0.27636979166666664,
+    "topology": "Searched (links <= 5)",
+    "zero_load_latency": 6.489281886387996,
+    "saturation": 0.2762395833333333,
     "estimate": 0.3333333333333333,
-    "zero_load_wire": 5.237687366167023
+    "zero_load_wire": 4.327974276527331
+  },
+  {
+    "wire_model": "4GHz",
+    "pattern": "tornado",
+    "topology": "Searched (wire <= 208)",
+    "zero_load_latency": 7.201933404940924,
+    "saturation": 0.27670833333333333,
+    "estimate": 0.3333333333333333,
+    "zero_load_wire": 5.2105263157894735
   }
 ]

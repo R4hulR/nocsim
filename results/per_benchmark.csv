@@ -1,0 +1,71 @@
+benchmark,regime,design,runtime_rel_mesh
+blackscholes,pipelined,Torus,0.8113242853854613
+blackscholes,pipelined,Folded torus,0.8113242853854613
+blackscholes,pipelined,Modified torus,0.8009155932174491
+blackscholes,pipelined,Searched (links <= 5),0.7450661119683548
+blackscholes,pipelined,Searched (wire <= 208),0.7492523507898483
+blackscholes,global,Torus,1.1389289397011202
+blackscholes,global,Folded torus,0.8479936751142662
+blackscholes,global,Modified torus,1.1254498771637826
+blackscholes,global,Searched (links <= 5),0.8673496217614723
+blackscholes,global,Searched (wire <= 208),1.2678468061403798
+canneal,pipelined,Torus,0.8586381162618111
+canneal,pipelined,Folded torus,0.8586381162618111
+canneal,pipelined,Modified torus,0.8541649786980431
+canneal,pipelined,Searched (links <= 5),0.8060092842830777
+canneal,pipelined,Searched (wire <= 208),0.808384287203367
+canneal,global,Torus,1.1338451103333809
+canneal,global,Folded torus,0.8957030981342493
+canneal,global,Modified torus,1.1286066108539397
+canneal,global,Searched (links <= 5),0.9180164624795804
+canneal,global,Searched (wire <= 208),1.2452378052167794
+ferret,pipelined,Torus,0.8948225666850264
+ferret,pipelined,Folded torus,0.8948225666850264
+ferret,pipelined,Modified torus,0.8912227555275789
+ferret,pipelined,Searched (links <= 5),0.8444655362341648
+ferret,pipelined,Searched (wire <= 208),0.8490548036824297
+ferret,global,Torus,1.1143935299207588
+ferret,global,Folded torus,0.9280185113498285
+ferret,global,Modified torus,1.110318897712961
+ferret,global,Searched (links <= 5),0.9406571123120552
+ferret,global,Searched (wire <= 208),1.1967781132030968
+fluidanimate,pipelined,Torus,0.8778850723897886
+fluidanimate,pipelined,Folded torus,0.8778850723897886
+fluidanimate,pipelined,Modified torus,0.871094339091717
+fluidanimate,pipelined,Searched (links <= 5),0.8217297310130965
+fluidanimate,pipelined,Searched (wire <= 208),0.8239395222436636
+fluidanimate,global,Torus,1.1178949895143813
+fluidanimate,global,Folded torus,0.9144679710500225
+fluidanimate,global,Modified torus,1.1101877080760152
+fluidanimate,global,Searched (links <= 5),0.9258620320564941
+fluidanimate,global,Searched (wire <= 208),1.1983311828010175
+swaptions,pipelined,Torus,0.8479063558396494
+swaptions,pipelined,Folded torus,0.8479063558396494
+swaptions,pipelined,Modified torus,0.8514584134607012
+swaptions,pipelined,Searched (links <= 5),0.7954335236819597
+swaptions,pipelined,Searched (wire <= 208),0.7997528138077967
+swaptions,global,Torus,1.1459876742967614
+swaptions,global,Folded torus,0.8834864893329436
+swaptions,global,Modified torus,1.150399382758099
+swaptions,global,Searched (links <= 5),0.9111598703841228
+swaptions,global,Searched (wire <= 208),1.2746036895158657
+vips,pipelined,Torus,0.9990937574391716
+vips,pipelined,Folded torus,0.9990937574391716
+vips,pipelined,Modified torus,0.9992099332452392
+vips,pipelined,Searched (links <= 5),0.9991119321818386
+vips,pipelined,Searched (wire <= 208),0.9990848482515897
+vips,global,Torus,1.000188240601023
+vips,global,Folded torus,0.9995629812849279
+vips,global,Modified torus,1.0003059433274264
+vips,global,Searched (links <= 5),0.9997577816057235
+vips,global,Searched (wire <= 208),1.000733848437745
+x264,pipelined,Torus,0.8664804534541609
+x264,pipelined,Folded torus,0.8664804534541609
+x264,pipelined,Modified torus,0.8477169896677303
+x264,pipelined,Searched (links <= 5),0.7896868126126513
+x264,pipelined,Searched (wire <= 208),0.7935963814015253
+x264,global,Torus,1.1598652419670024
+x264,global,Folded torus,0.8990167811433116
+x264,global,Modified torus,1.1366913272910182
+x264,global,Searched (links <= 5),0.9046219173276784
+x264,global,Searched (wire <= 208),1.2546910129387023

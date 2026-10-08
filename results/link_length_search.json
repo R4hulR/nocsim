@@ -1,0 +1,82 @@
+{
+  "best_per_limit": [
+    {
+      "limit": 2,
+      "max_link": 2,
+      "total_wire": 144,
+      "avg_hops": 4.765873015873016,
+      "throughput_rel_torus": 0.5167220656346765,
+      "found_by": "cold start"
+    },
+    {
+      "limit": 3,
+      "max_link": 3,
+      "total_wire": 152,
+      "avg_hops": 4.406746031746032,
+      "throughput_rel_torus": 0.604116420493455,
+      "found_by": "cold start"
+    },
+    {
+      "limit": 4,
+      "max_link": 4,
+      "total_wire": 166,
+      "avg_hops": 4.183035714285714,
+      "throughput_rel_torus": 0.5985012671841551,
+      "found_by": "cold start"
+    },
+    {
+      "limit": 5,
+      "max_link": 5,
+      "total_wire": 180,
+      "avg_hops": 3.8422619047619047,
+      "throughput_rel_torus": 0.6497788218009564,
+      "found_by": "cold start"
+    },
+    {
+      "limit": 7,
+      "max_link": 7,
+      "total_wire": 224,
+      "avg_hops": 4.063492063492063,
+      "throughput_rel_torus": 1.0,
+      "found_by": "warm start"
+    },
+    {
+      "limit": null,
+      "max_link": 7,
+      "total_wire": 224,
+      "avg_hops": 4.063492063492063,
+      "throughput_rel_torus": 1.0,
+      "found_by": "warm start"
+    }
+  ],
+  "references": [
+    {
+      "topology": "Mesh",
+      "max_link": 1,
+      "total_wire": 112,
+      "avg_hops": 5.333333333333333,
+      "throughput_rel_torus": 0.5579948799794714
+    },
+    {
+      "topology": "Torus",
+      "max_link": 7,
+      "total_wire": 224,
+      "avg_hops": 4.063492063492063,
+      "throughput_rel_torus": 1.0
+    },
+    {
+      "topology": "Folded torus",
+      "max_link": 2,
+      "total_wire": 224,
+      "avg_hops": 4.063492063492063,
+      "throughput_rel_torus": 1.0
+    },
+    {
+      "topology": "Modified torus",
+      "max_link": 7,
+      "total_wire": 176,
+      "avg_hops": 4.130952380952381,
+      "throughput_rel_torus": 0.6284820392428555
+    }
+  ]
+}

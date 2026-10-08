@@ -46,5 +46,19 @@ desktop.ini
 file7.pdf
 project_8th_sem[[]2].txt
 
-# arXiv upload bundle (regenerate from paper/)
+# arXiv upload bundle of the v1 preprint (regenerate from paper/v1_preprint/)
 arxiv_submission.zip
+
+# Journal submission materials (personal; not part of the code release)
+paper/v1_preprint/submission/
+paper/jsa_submission/
+
+# External tools and traces fetched by the README reproduction steps
+/booksim2/
+/gem5/
+/dsent
+/netrace-1.0/
+/netrace-1.0.tar.bz2
+/netrace_dump
+*.tra.bz2
+/traces/

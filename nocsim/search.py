@@ -60,6 +60,7 @@ class Objective:
 
     n: int
     wire_budget: float
+    max_link: int | None = None  # longest allowed extra link, tiles (None = no limit)
     patterns: tuple = DEFAULT_PATTERNS
     hop_weight: float = 0.25
     penalty: float = 5.0
@@ -104,20 +105,41 @@ class Objective:
 
 
 class DesignSpace:
-    """Valid perfect matchings of the 4n spare boundary ports of an n x n mesh."""
+    """Valid perfect matchings of the 4n spare boundary ports of an n x n mesh.
 
-    def __init__(self, n: int):
+    ``max_link`` optionally caps the length of every extra link (in tiles).
+    A clock is limited by its longest wire (Kite, NetSmith), so this is the
+    on-chip counterpart of their small/medium/large link-length classes.
+    """
+
+    def __init__(self, n: int, max_link: int | None = None):
         self.n = n
+        self.max_link = max_link
         self.ports = boundary_ports(n)  # node id per port; corners appear twice
         self.mesh = set(_mesh_edges(n))
 
+    def length(self, u: int, v: int) -> int:
+        n = self.n
+        return abs(u // n - v // n) + abs(u % n - v % n)
+
     def can_link(self, u: int, v: int, existing: set) -> bool:
-        """A new link must not be a self-loop, a mesh link, or a duplicate."""
+        """A new link must not be a self-loop, a mesh link, a duplicate, or too long."""
         e = _norm(u, v)
-        return u != v and e not in self.mesh and e not in existing
+        if u == v or e in self.mesh or e in existing:
+            return False
+        return self.max_link is None or self.length(u, v) <= self.max_link
 
     def random_matching(self, rng: random.Random, tries: int = 1000) -> list[tuple[int, int]]:
-        """Uniformly random valid matching, by shuffling and pairing with rejection."""
+        """Random valid matching.
+
+        Without a length cap: shuffle the ports and pair neighbours, rejecting
+        invalid pairings (uniform over valid matchings). With a cap, almost
+        every shuffle would be rejected, so ports are matched one at a time to
+        a random partner that is still free and in range, restarting on a
+        dead end.
+        """
+        if self.max_link is not None:
+            return self._constructive_matching(rng, tries)
         for _ in range(tries):
             ports = self.ports[:]
             rng.shuffle(ports)
@@ -130,6 +152,24 @@ class DesignSpace:
             if ok:
                 return sorted(links)
         raise RuntimeError("could not sample a valid matching")
+
+    def _constructive_matching(self, rng: random.Random, tries: int) -> list[tuple[int, int]]:
+        for _ in range(tries):
+            free = list(range(len(self.ports)))
+            rng.shuffle(free)
+            links, ok = set(), True
+            while free:
+                i = free.pop()
+                cands = [j for j in free if self.can_link(self.ports[i], self.ports[j], links)]
+                if not cands:
+                    ok = False
+                    break
+                j = rng.choice(cands)
+                free.remove(j)
+                links.add(_norm(self.ports[i], self.ports[j]))
+            if ok:
+                return sorted(links)
+        raise RuntimeError(f"no valid matching found with max_link={self.max_link}")
 
     def neighbor(self, links: list, rng: random.Random) -> list | None:
         """Re-pair two random links: (a,b),(c,d) -> (a,c),(b,d) or (a,d),(b,c).
@@ -173,7 +213,7 @@ def _track(obj: Objective, history: list, best: list, links) -> float:
 
 
 def random_search(obj: Objective, budget: int, seed: int = 0) -> SearchResult:
-    rng, space = random.Random(seed), DesignSpace(obj.n)
+    rng, space = random.Random(seed), DesignSpace(obj.n, obj.max_link)
     best, history = [-math.inf, None], []
     start = obj.evaluations
     while obj.evaluations - start < budget:
@@ -189,7 +229,7 @@ def simulated_annealing(
     The temperatures are in units of J. 0.05 lets the search accept moves that
     cost about 5% of torus throughput early on.
     """
-    rng, space = random.Random(seed), DesignSpace(obj.n)
+    rng, space = random.Random(seed), DesignSpace(obj.n, obj.max_link)
     best, history = [-math.inf, None], []
     start = obj.evaluations
     cur = list(init) if init is not None else space.random_matching(rng)
@@ -226,7 +266,7 @@ def reinforce(
     distribution over designs. It's simple and transparent, and it's a fair
     RL baseline to set against annealing at an equal evaluation budget.
     """
-    rng, space = np.random.default_rng(seed), DesignSpace(obj.n)
+    rng, space = np.random.default_rng(seed), DesignSpace(obj.n, obj.max_link)
     ports = space.ports
     P = len(ports)
     theta = np.zeros((P, P))

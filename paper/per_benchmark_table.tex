@@ -1,0 +1,23 @@
+\begin{table}[t]
+\centering
+\caption{Runtime relative to the mesh for each PARSEC benchmark ($10\times$ compression, 1.5~mm tiles); lower is better. Best evaluated design per row in bold.}
+\label{tab:perbench}
+\small
+\begin{tabular}{@{}lrrrrrrrrrr@{}}
+\toprule
+ & \multicolumn{5}{c}{Fixed 2~GHz clock} & \multicolumn{5}{c}{Wire-limited clock} \\
+\cmidrule(lr){2-6}\cmidrule(l){7-11}
+Benchmark & Torus & Folded & Modified & S.\,$\le$5 & S.\,$\le$208 & Torus & Folded & Modified & S.\,$\le$5 & S.\,$\le$208 \\
+\midrule
+blackscholes & 0.811 & 0.811 & 0.801 & \textbf{0.745} & 0.749 & 1.139 & \textbf{0.848} & 1.125 & 0.867 & 1.268 \\
+canneal & 0.859 & 0.859 & 0.854 & \textbf{0.806} & 0.808 & 1.134 & \textbf{0.896} & 1.129 & 0.918 & 1.245 \\
+ferret & 0.895 & 0.895 & 0.891 & \textbf{0.844} & 0.849 & 1.114 & \textbf{0.928} & 1.110 & 0.941 & 1.197 \\
+fluidanimate & 0.878 & 0.878 & 0.871 & \textbf{0.822} & 0.824 & 1.118 & \textbf{0.914} & 1.110 & 0.926 & 1.198 \\
+swaptions & 0.848 & 0.848 & 0.851 & \textbf{0.795} & 0.800 & 1.146 & \textbf{0.883} & 1.150 & 0.911 & 1.275 \\
+vips & 0.999 & 0.999 & 0.999 & 0.999 & \textbf{0.999} & 1.000 & \textbf{1.000} & 1.000 & 1.000 & 1.001 \\
+x264 & 0.866 & 0.866 & 0.848 & \textbf{0.790} & 0.794 & 1.160 & \textbf{0.899} & 1.137 & 0.905 & 1.255 \\
+\midrule
+Geo.\ mean & 0.878 & 0.878 & 0.872 & 0.826 & 0.829 & 1.115 & 0.909 & 1.108 & 0.923 & 1.202 \\
+\bottomrule
+\end{tabular}
+\end{table}
